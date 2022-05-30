@@ -6,7 +6,6 @@
 // TM1637 4d Display Pins
 // SCLK -> D2 - GPIO4
 // DIO  -> D7 - GPIO13
-
 int tm_DIO = 13;
 int tm_CLK = 4;
 
@@ -16,9 +15,15 @@ TM1637Display display(tm_CLK, tm_DIO);
 // SCLK -> D5 - GPIO14
 // MISO -> D6 - GPIO12
 // CS   -> D8 - GPIO15
-
 int max_CS = 15;
 float temp = 0;
+
+// Buzzer PIN
+// BUZZ -> D1 - GPIO5
+int BUZZ = 5;
+
+float temp_low = 20.00;
+float temp_high = 25.00;
 
 double readTemperatureC(uint8_t CS) {
     //READ MAX6675 Temperature in Celsius using SPI Interface
@@ -48,9 +53,13 @@ void setup(){
     pinMode(max_CS, OUTPUT);
     digitalWrite(max_CS, HIGH);
 
+    // Set Buzzer PIN as Output
+    pinMode(BUZZ, OUTPUT);
+
     // Prepare Display and Wait for MAX initialization
     uint8_t data[] = { 0xff, 0xff, 0xff, 0xff };
     display.setBrightness(0x0f);
+    display.setSegments(data);
 
     delay(500);
 
@@ -75,5 +84,10 @@ void loop(){
       display.showNumberDec(temp);
     }
     Serial.print("\n");
+
+    tone(BUZZ, 987);
+
     delay(1000);
+
+    noTone(BUZZ);
 }
