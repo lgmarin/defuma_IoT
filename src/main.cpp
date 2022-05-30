@@ -6,9 +6,10 @@
 // CS   -> D8 - GPIO15
 
 int max_CS = 15;
+float temp = 0;
 
 double readTemperatureC(uint8_t CS) {
-    //READ Data Temp.
+    //READ MAX6675 Temperature in Celsius using SPI Interface
     uint16_t v;
 
     digitalWrite(CS, LOW);
@@ -19,7 +20,7 @@ double readTemperatureC(uint8_t CS) {
 
     if (v & 0x4) {
         // No thermocouple attached, return 0
-        return 0; 
+        return NAN; 
     }
 
     v >>= 3;
@@ -40,6 +41,16 @@ void setup(){
 
 void loop(){
     //Read Temperature Data
-    Serial.print(readTemperatureC(max_CS));
+
+    if (readTemperatureC(max_CS) == NAN)
+    {
+      Serial.print("Error: No Thermocouple connected!");
+    } 
+    else
+    {
+      temp = readTemperatureC(max_CS);
+      Serial.print("Temperature: " + temp + " C");
+    }
+    Serial.print("\n");
     delay(1000);
 }
