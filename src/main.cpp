@@ -4,11 +4,11 @@
 // USING GPIO PINS FOR ESP12 Compatibility!
 // D# Pins correspond to nodeMCU V1.2 pins
 // TM1637 4d Display Pins
-// SCLK -> D5 - GPIO14
+// SCLK -> D2 - GPIO4
 // DIO  -> D7 - GPIO13
 
 int tm_DIO = 13;
-int tm_CLK = 14;
+int tm_CLK = 4;
 
 TM1637Display display(tm_CLK, tm_DIO);
 
@@ -48,7 +48,14 @@ void setup(){
     pinMode(max_CS, OUTPUT);
     digitalWrite(max_CS, HIGH);
 
+    // Prepare Display and Wait for MAX initialization
+    uint8_t data[] = { 0xff, 0xff, 0xff, 0xff };
+    display.setBrightness(0x0f);
+
+    delay(500);
+
     Serial.begin(9600);
+    display.clear();
 }
 
 void loop(){
