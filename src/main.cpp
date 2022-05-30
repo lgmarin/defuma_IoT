@@ -49,7 +49,9 @@ void loop(){
     else
     {
       temp = readTemperatureC(max_CS);
-      Serial.print("Temperature: " + temp + " C");
+      Serial.print("Temperature: ");
+      Serial.print(temp);
+      Serial.print(" C");
     }
     Serial.print("\n");
     delay(1000);
