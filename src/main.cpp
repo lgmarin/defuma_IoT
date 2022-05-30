@@ -22,8 +22,8 @@ float temp = 0;
 // BUZZ -> D1 - GPIO5
 int BUZZ = 5;
 
-float temp_low = 20.00;
-float temp_high = 25.00;
+float temp_low = 24.00;
+float temp_high = 26.00;
 
 double readTemperatureC(uint8_t CS) {
     //READ MAX6675 Temperature in Celsius using SPI Interface
@@ -69,25 +69,29 @@ void setup(){
 
 void loop(){
     //Read Temperature Data
+    temp = readTemperatureC(max_CS);
 
-    if (readTemperatureC(max_CS) == NAN)
+    if (temp == NAN)
     {
       Serial.print("Error: No Thermocouple connected!");
     } 
     else
     {
-      temp = readTemperatureC(max_CS);
       Serial.print("Temperature: ");
       Serial.print(temp);
       Serial.print(" C");
-
       display.showNumberDec(temp);
     }
     Serial.print("\n");
 
-    tone(BUZZ, 987);
+    if (temp != NAN && temp > temp_high) {
+      tone(BUZZ, 987);
+    } else if (temp != NAN && temp < temp_low) {
+      tone(BUZZ, 523);
+    } else {
+      noTone(BUZZ);
+    }
 
     delay(1000);
-
     noTone(BUZZ);
 }
