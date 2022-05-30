@@ -1,4 +1,16 @@
 #include <SPI.h>
+#include <TM1637Display.h>
+
+// USING GPIO PINS FOR ESP12 Compatibility!
+// D# Pins correspond to nodeMCU V1.2 pins
+// TM1637 4d Display Pins
+// SCLK -> D5 - GPIO14
+// DIO  -> D7 - GPIO13
+
+int tm_DIO = 13;
+int tm_CLK = 14;
+
+TM1637Display display(tm_CLK, tm_DIO);
 
 // Define main pins for MAX6675
 // SCLK -> D5 - GPIO14
@@ -52,6 +64,8 @@ void loop(){
       Serial.print("Temperature: ");
       Serial.print(temp);
       Serial.print(" C");
+
+      display.showNumberDec(temp);
     }
     Serial.print("\n");
     delay(1000);
