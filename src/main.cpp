@@ -85,7 +85,7 @@ void loop(){
     Serial.print("\n");
 
     if (temp != NAN && temp > temp_high) {
-      tone(BUZZ, 523, 10);
+      tone(BUZZ, 523, 800);
     } else if (temp != NAN && temp < temp_low) {
       tone(BUZZ, 1000, 200);
     } else {
