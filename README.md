@@ -35,3 +35,11 @@ Development of a data monitoring for a meat smoker:
 
 * SPI (Arduino IDE Default Libraries) - For reading the MAX6675 data through the SPI Bus.
 * TM1637 by Smougenot - For displaying data in the display.
+
+## References
+
+[NodeMCU and ESP pinout and Setup](https://www.mischianti.org/2021/05/08/esp12-esp07-esp8266-flash-pinout-specs-and-arduino-ide-configuration-6/)
+[TM1637 Connection](https://www.electroniclinic.com/tm1637-a-4-digit-7-segment-display-with-arduino/)
+[Read MAX6675 with the SPI Library](https://arduinodiy.wordpress.com/2019/12/06/using-a-max6675-temperature-sensor-without-a-library/)
+[Buzzer with NodeMCU](https://www.geekering.com/categories/embedded-sytems/esp8266/ricardocarreira/esp8266-nodemcu-make-some-noise-with-buzzers/)
+[Control Threshold with an webserver](https://microcontrollerslab.com/esp32-esp8266-thermostat-web-server-control-output-temperature-threshold/)
