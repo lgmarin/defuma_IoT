@@ -5,7 +5,7 @@
 [![C++](https://img.shields.io/badge/C-++-blue.svg)]()
 [![PlatformIO](https://img.shields.io/badge/Platform-IO-blue.svg)](https://platformio.org/)
 
-![CHURRASQUEIRA CONTROLE REMOTO](tapegandofogo.jpg "TÁ PEGANDO FOGO BICHO - CHURRASQUEIRA CONTROLE REMOTO")
+![CHURRASQUEIRA CONTROLE REMOTO](/img/tapegandofogo.jpg "TÁ PEGANDO FOGO BICHO - CHURRASQUEIRA CONTROLE REMOTO")
 
 This software was developed with the intention to help to produce a delicious, tender and with an amazing smoked flavored meat! What better way than to make a Nerd happy than with some long smoking process with some friends, some beer and some technology involved, why not?
 
