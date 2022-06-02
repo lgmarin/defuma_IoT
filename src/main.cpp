@@ -19,7 +19,7 @@ TM1637Display display(tm_CLK, tm_DIO);
 // MISO -> D6 - GPIO12
 // CS   -> D8 - GPIO15
 int max_CS = 15;
-float temp = 0;
+float temperature = 0;
 
 // Buzzer PIN
 // BUZZ -> D1 - GPIO5
@@ -29,8 +29,8 @@ int BUZZ = 5;
 const char* ssid = "Your_SSID";   //replace with your SSID
 const char* password = "Your_Password";    //replace with your password
 
-string temp_low = "24.0";
-string temp_high = "26.0";
+String temp_low = "24.0";
+String temp_high = "26.0";
 String last_temperature;
 
 // Web Page Code to be stored in Memory
