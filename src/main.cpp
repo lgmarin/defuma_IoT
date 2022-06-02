@@ -25,8 +25,63 @@ float temp = 0;
 // BUZZ -> D1 - GPIO5
 int BUZZ = 5;
 
-float temp_low = 24.00;
-float temp_high = 26.00;
+// WebServer Configuration
+const char* ssid = "Your_SSID";   //replace with your SSID
+const char* password = "Your_Password";    //replace with your password
+
+string temp_low = "24.0";
+string temp_high = "26.0";
+String last_temperature;
+
+// Web Page Code to be stored in Memory
+const char index_html[] PROGMEM = R"rawliteral(
+<!DOCTYPE HTML><html><head>
+  <title>ESP Thermostat Web server</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    html {font-family: Times New Roman; display: inline-block; text-align: center;}
+    h2 {font-size: 3.0rem;}
+    h3 {font-size: 2.0rem; color: #FF0000;}
+  </style>
+  
+  </head><body>
+  <h2>Defumadeira Controle Remoto</h2> 
+  <h3>%TEMPERATURE% &deg;C</h3>
+  <h2>Níveis de Temperatura</h2>
+  <form action="/get">
+    Temperatura Máxima <input type="number" step="0.1" name="threshold_max" value="%THRESHOLD_MAX%" required><br>
+    Temperatura Mínima <input type="number" step="0.1" name="threshold_min" value="%THRESHOLD_MIN%" required><br>
+    <br/>
+    <input type="submit" value="Enviar">
+  </form>
+</body></html>)rawliteral";
+
+void notFound(AsyncWebServerRequest *request) {
+  request->send(404, "text/plain", "Not found");
+}
+
+// Open WebServer connection at PORT 80
+AsyncWebServer server(80);
+
+// String processor to be used to parse data to the web browser
+String processor(const String& var){
+
+  if(var == "TEMPERATURE"){
+    return last_temperature;
+  }
+  else if(var == "THRESHOLD_MAX"){
+    return temp_high;
+  }
+  else if(var == "THRESHOLD_MIN"){
+    return temp_low;
+  }
+  return String();
+}
+
+// Configure time interval between readings - 1 second
+unsigned long previousMillis = 0;     
+const long interval = 1000;
 
 double readTemperatureC(uint8_t CS) {
   //READ MAX6675 Temperature in Celsius using SPI Interface
@@ -49,6 +104,13 @@ double readTemperatureC(uint8_t CS) {
 }
 
 void setup(){
+  Serial.begin(9600);
+
+  // Prepare Display and Wait for MAX initialization
+  uint8_t data[] = { 0xff, 0xff, 0xff, 0xff };
+  display.setBrightness(0x0f);
+  display.setSegments(data);
+
   //Intiate SPI transaction
   SPI.begin();
 
@@ -59,42 +121,83 @@ void setup(){
   // Set Buzzer PIN as Output
   pinMode(BUZZ, OUTPUT);
 
-  // Prepare Display and Wait for MAX initialization
-  uint8_t data[] = { 0xff, 0xff, 0xff, 0xff };
-  display.setBrightness(0x0f);
-  display.setSegments(data);
+  // Delay for MAX init
+  // delay(500);
 
-  delay(500);
+  // Prepare WIFI Connection
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+  if (WiFi.waitForConnectResult() != WL_CONNECTED) {
+    Serial.println("Connecting...");
+    return;
+  }
+  Serial.println();
+  Serial.print("IP Address: ");
+  Serial.println(WiFi.localIP());
 
-  Serial.begin(9600);
   display.clear();
+
+  // Configure Server Async calls
+
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/html", index_html, processor);
+  });
+
+  server.on("/get", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    if (request->hasParam("threshold_max") && request->hasParam("threshold_min")) {
+      temp_high = request->getParam("threshold_max")->value();
+      temp_low = request->getParam("threshold_min")->value();
+    }
+
+    Serial.println("threshold_max");
+    Serial.println("threshold_min");
+
+    request->send(200, "text/html", "HTTP GET request sent to your ESP.<br><a href=\"/\">Return to Home Page</a>");
+  });
+
+  server.onNotFound(notFound);
+  server.begin();    
 }
 
 void loop(){
-  //Read Temperature Data
-  temp = readTemperatureC(max_CS);
+  // Use millis() to generate a counter and ditch delay()
+  unsigned long currentMillis = millis();
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
 
-  if (temp == NAN)
-  {
-    Serial.print("Error: No Thermocouple connected!");
-  } 
-  else
-  {
-    Serial.print("Temperature: ");
-    Serial.print(temp);
-    Serial.print(" C");
-    display.showNumberDec(temp);
+    //Read Temperature Data
+    temperature = readTemperatureC(max_CS);
+
+    if (temperature == NAN)
+    {
+      Serial.print("Error: No Thermocouple connected!");
+    } 
+    else
+    {
+      Serial.print("Temperature: ");
+      Serial.print(temperature);
+      Serial.println(" °C");
+      display.showNumberDec(temperature);
+    }
+    Serial.print("\n");
+
+    // Keep track of the last temperature read
+    last_temperature = String(temperature);
+    
+    if(temperature > temp_high.toFloat() && temperature != NAN){
+      String message = String("Temperature is too high. Current temperature: ") + 
+                            String(temperature) + String("C");
+      Serial.println(message);
+      tone(BUZZ, 523, 800);
+    }
+    else if(temperature < temp_low.toFloat() && temperature != NAN){
+      String message = String("Temperature is too low. Current temperature: ") + 
+                            String(temperature) + String(" C");
+      Serial.println(message);
+      tone(BUZZ, 1000, 200);
+    }
+    else {
+      noTone(BUZZ);
+    }
   }
-  Serial.print("\n");
-
-  if (temp != NAN && temp > temp_high) {
-    tone(BUZZ, 523, 800);
-  } else if (temp != NAN && temp < temp_low) {
-    tone(BUZZ, 1000, 200);
-  } else {
-    noTone(BUZZ);
-  }
-
-  delay(1000);
-  //noTone(BUZZ);
 }
