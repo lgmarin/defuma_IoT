@@ -44,4 +44,5 @@ Development of a data monitoring for a meat smoker:
 * [Buzzer with NodeMCU](https://www.geekering.com/categories/embedded-sytems/esp8266/ricardocarreira/esp8266-nodemcu-make-some-noise-with-buzzers/)
 * [Control Threshold with an webserver](https://microcontrollerslab.com/esp32-esp8266-thermostat-web-server-control-output-temperature-threshold/)
 * [Wifi Manager - Configure Wifi Connection](https://randomnerdtutorials.com/wifimanager-with-esp8266-autoconnect-custom-parameter-and-manage-your-ssid-and-password/)
+* [Async WifiManager](https://randomnerdtutorials.com/esp8266-nodemcu-wi-fi-manager-asyncwebserver/)
 * [Plot Sensor Data](https://randomnerdtutorials.com/esp32-esp8266-plot-chart-web-server/)

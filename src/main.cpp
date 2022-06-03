@@ -149,8 +149,10 @@ void setup(){
       temp_low = request->getParam("threshold_min")->value();
     }
 
-    Serial.println("threshold_max");
-    Serial.println("threshold_min");
+    Serial.println("Set threshold_max");
+    Serial.println(temp_high);
+    Serial.println("Set threshold_min");
+    Serial.println(temp_low);
 
     request->send(200, "text/html", "HTTP GET request sent to your ESP.<br><a href=\"/\">Return to Home Page</a>");
   });
