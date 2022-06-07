@@ -79,20 +79,6 @@ void setup(){
   // Set Buzzer PIN as Output
   pinMode(BUZZ, OUTPUT);
 
-  // Delay for MAX init
-  // delay(500);
-
-  // Prepare WIFI Connection
-  // WiFi.mode(WIFI_STA);
-  // WiFi.begin(ssid, password);
-  // if (WiFi.waitForConnectResult() != WL_CONNECTED) {
-  //   Serial.println("Connecting...");
-  //   return;
-  // }
-  // Serial.println();
-  // Serial.print("IP Address: ");
-  // Serial.println(WiFi.localIP());
-
   ESPAsync_WiFiManager ESPAsync_wifiManager(&server, &dnsServer, "defuma_iot");
   //ESPAsync_wifiManager.resetSettings();   //reset saved settings
   //ESPAsync_wifiManager.setAPStaticIPConfig(IPAddress(192,168,186,1), IPAddress(192,168,186,1), IPAddress(255,255,255,0));
