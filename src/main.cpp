@@ -4,6 +4,7 @@
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include <index_html.h>
+#include <read_temp.h>
 
 // USING GPIO PINS FOR ESP12 Compatibility!
 // D# Pins correspond to nodeMCU V1.2 pins
@@ -59,26 +60,6 @@ String processor(const String& var){
 // Configure time interval between readings - 1 second
 unsigned long previousMillis = 0;     
 const long interval = 1000;
-
-double readTemperatureC(uint8_t CS) {
-  //READ MAX6675 Temperature in Celsius using SPI Interface
-  uint16_t v;
-
-  digitalWrite(CS, LOW);
-  v = SPI.transfer(0x00);
-  v <<= 8;
-  v |= SPI.transfer(0x00);
-  digitalWrite(CS, HIGH);
-
-  if (v & 0x4) {
-      // No thermocouple attached, return 0
-      return NAN; 
-  }
-
-  v >>= 3;
-
-  return v*0.25;
-}
 
 void setup(){
   Serial.begin(9600);
