@@ -1,8 +1,7 @@
 #include <SPI.h>
 #include <TM1637Display.h>
-#include <ESP8266WiFi.h>
-#include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
+#include <ESPAsync_WiFiManager.h>
 
 #include <index_html.h>
 #include <read_temp.h>
@@ -42,6 +41,7 @@ void notFound(AsyncWebServerRequest *request) {
 
 // Open WebServer connection at PORT 80
 AsyncWebServer server(80);
+DNSServer dnsServer;
 
 // String processor to be used to parse data to the web browser
 String processor(const String& var){
@@ -59,19 +59,18 @@ String processor(const String& var){
 }
 
 // Configure time interval between readings - 1 second
-unsigned long previousMillis = 0;     
+unsigned long previousMillis = 0;
 const long interval = 1000;
 
 void setup(){
+  //Intiate SPI transaction
+  SPI.begin();
   Serial.begin(9600);
 
   // Prepare Display and Wait for MAX initialization
   uint8_t data[] = { 0xff, 0xff, 0xff, 0xff };
   display.setBrightness(0x0f);
   display.setSegments(data);
-
-  //Intiate SPI transaction
-  SPI.begin();
 
   //Set max_CS Pin as OUTPUT and set to HIGH to Intiate MAX 6675
   pinMode(max_CS, OUTPUT);
@@ -84,15 +83,34 @@ void setup(){
   // delay(500);
 
   // Prepare WIFI Connection
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
-  if (WiFi.waitForConnectResult() != WL_CONNECTED) {
-    Serial.println("Connecting...");
-    return;
+  // WiFi.mode(WIFI_STA);
+  // WiFi.begin(ssid, password);
+  // if (WiFi.waitForConnectResult() != WL_CONNECTED) {
+  //   Serial.println("Connecting...");
+  //   return;
+  // }
+  // Serial.println();
+  // Serial.print("IP Address: ");
+  // Serial.println(WiFi.localIP());
+
+  ESPAsync_WiFiManager ESPAsync_wifiManager(&server, &dnsServer, "defuma_iot");
+  //ESPAsync_wifiManager.resetSettings();   //reset saved settings
+  //ESPAsync_wifiManager.setAPStaticIPConfig(IPAddress(192,168,186,1), IPAddress(192,168,186,1), IPAddress(255,255,255,0));
+  Serial.println("Trying to connect to previously saved AP...");
+  ESPAsync_wifiManager.autoConnect("defuma_iot");
+
+  if (WiFi.status() == WL_CONNECTED)
+  {
+      Serial.print(F("Connected. Local IP: "));
+      Serial.println(WiFi.localIP());
   }
-  Serial.println();
-  Serial.print("IP Address: ");
-  Serial.println(WiFi.localIP());
+  else
+  {
+      Serial.println(ESPAsync_wifiManager.getStatus(WiFi.status()));
+      Serial.println("Can't connect! Entering WiFi config mode...");
+      Serial.println("Restart board...");
+      ESP.reset();
+  }
 
   display.clear();
 
