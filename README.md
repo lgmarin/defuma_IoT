@@ -1,6 +1,6 @@
 # Defuma IoT
 
-## _An ESP8266 based smoker controller and data acquisition system_
+## _An ESP8266 based smoker controller and data acquisition system. AKA: Defumadeira Controle Remoto_
 [![ESP8266](https://img.shields.io/badge/ESP-8266-blue.svg)](https://github.com/esp8266/esp8266-wiki)
 [![C++](https://img.shields.io/badge/C-++-blue.svg)]()
 [![PlatformIO](https://img.shields.io/badge/Platform-IO-blue.svg)](https://platformio.org/)
@@ -35,6 +35,8 @@ Development of a data monitoring for a meat smoker:
 
 * SPI (Arduino IDE Default Libraries) - For reading the MAX6675 data through the SPI Bus.
 * TM1637 by Smougenot - For displaying data in the display.
+* [ESPAsyncTCP](https://github.com/me-no-dev/ESPAsyncTCP) - Base library for ESPAsyncWebServer.
+* [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer) - An Async Web Server implementation for the ESP8266.
 
 ## References
 
@@ -47,4 +49,3 @@ Development of a data monitoring for a meat smoker:
 * [Async WifiManager](https://randomnerdtutorials.com/esp8266-nodemcu-wi-fi-manager-asyncwebserver/)
 * [Async WifiManager](https://microcontrollerslab.com/esp32-wi-fi-manager-asyncwebserver/)
 * [Plot Sensor Data](https://randomnerdtutorials.com/esp32-esp8266-plot-chart-web-server/)
-*
