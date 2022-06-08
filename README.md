@@ -48,4 +48,6 @@ Development of a data monitoring for a meat smoker:
 * [Wifi Manager - Configure Wifi Connection](https://randomnerdtutorials.com/wifimanager-with-esp8266-autoconnect-custom-parameter-and-manage-your-ssid-and-password/)
 * [Async WifiManager - AsyncWebServer](https://randomnerdtutorials.com/esp8266-nodemcu-wi-fi-manager-asyncwebserver/)
 * [Async WifiManager - AsyncWebServer](https://microcontrollerslab.com/esp32-wi-fi-manager-asyncwebserver/)
+* [Async WifiManager](https://stonez56.blogspot.com/2021/07/asyncwifimanager-elegantota-esp8266.html)
 * [Plot Sensor Data](https://randomnerdtutorials.com/esp32-esp8266-plot-chart-web-server/)
+* [Material Desing Lite Pages](https://www.luisllamas.es/material-design-esp8266/)
