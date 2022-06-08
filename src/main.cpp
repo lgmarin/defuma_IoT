@@ -102,7 +102,8 @@ void setup(){
   // Configure Server Async calls
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "text/html", index_html, processor);
+    //request->send_P(200, "text/html", index_html, processor);
+    request->send(LittleFS, "/index.html", "text/html", false, processor);
   });
 
   server.on("/get", HTTP_GET, [] (AsyncWebServerRequest *request) {
