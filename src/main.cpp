@@ -116,7 +116,7 @@ void setup(){
     Serial.println("Set threshold_min");
     Serial.println(temp_low);
 
-    // request->send(200, "text/html", "HTTP GET request sent to your ESP.<br><a href=\"/\">Return to Home Page</a>");
+    request->send(200, "text/html", "HTTP GET request sent to your ESP.<br><a href=\"/\">Return to Home Page</a>");
   });
 
   server.on("/reset-wifi", HTTP_GET, [](AsyncWebServerRequest *request){
