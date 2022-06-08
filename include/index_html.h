@@ -14,7 +14,8 @@ const char index_html[] PROGMEM = R"rawliteral(
   </style>
   
   </head><body>
-  <h2>Defumadeira Controle Remoto</h2> 
+  <h2>Defumadeira Controle Remoto</h2>
+  <a href=\"/esquecer-wifi\">Esquecer Wifi</a>
   <h3>%TEMPERATURE% &deg;C</h3>
   <h2>Níveis de Temperatura</h2>
   <form action="/get">

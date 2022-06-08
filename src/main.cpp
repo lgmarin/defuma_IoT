@@ -5,6 +5,7 @@
 
 #include <index_html.h>
 #include <read_temp.h>
+#include <file_utils.h>
 
 // USING GPIO PINS FOR ESP12 Compatibility!
 // D# Pins correspond to nodeMCU V1.2 pins
@@ -63,6 +64,9 @@ void setup(){
   SPI.begin();
   Serial.begin(9600);
 
+  // Init LittleFS
+  initFS();
+
   // Prepare Display and Wait for MAX initialization
   uint8_t data[] = { 0xff, 0xff, 0xff, 0xff };
   display.setBrightness(0x0f);
@@ -77,7 +81,6 @@ void setup(){
 
   ESPAsync_WiFiManager ESPAsync_wifiManager(&server, &dnsServer, "defuma_iot");
   //ESPAsync_wifiManager.resetSettings();   //reset saved settings
-  //ESPAsync_wifiManager.setAPStaticIPConfig(IPAddress(192,168,186,1), IPAddress(192,168,186,1), IPAddress(255,255,255,0));
   Serial.println("Trying to connect to previously saved AP...");
   ESPAsync_wifiManager.autoConnect("defuma_iot");
 
@@ -113,7 +116,12 @@ void setup(){
     Serial.println("Set threshold_min");
     Serial.println(temp_low);
 
-    request->send(200, "text/html", "HTTP GET request sent to your ESP.<br><a href=\"/\">Return to Home Page</a>");
+    // request->send(200, "text/html", "HTTP GET request sent to your ESP.<br><a href=\"/\">Return to Home Page</a>");
+  });
+
+  server.on("/reset-wifi", HTTP_GET, [](AsyncWebServerRequest *request){
+    Serial.println("Reseting WIFI settings!");
+    Serial.println("REBOOT ESP8266 to reconnect!");
   });
 
   server.onNotFound(notFound);
@@ -140,7 +148,6 @@ void loop(){
       Serial.println(" °C");
       display.showNumberDec(temperature);
     }
-    Serial.print("\n");
 
     // Keep track of the last temperature read
     last_temperature = String(temperature);
