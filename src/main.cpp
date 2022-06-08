@@ -2,6 +2,7 @@
 #include <TM1637Display.h>
 #include <ESPAsyncWebServer.h>
 #include <ESPAsync_WiFiManager.h>
+#include "LittleFS.h"
 
 #include <index_html.h>
 #include <read_temp.h>
