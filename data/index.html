@@ -1,0 +1,119 @@
+<!doctype html>
+<html class="no-js" lang="">
+ 
+<head>
+   <title>Defuma IoT - Defumadeira Controle Remoto</title>
+   <meta charset="utf-8">
+   <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+   <meta name="description" content="">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+ 
+<body>
+	<!-- <link rel="stylesheet" href="vendor/google-fonts.css"> -->
+	<!-- <link rel="stylesheet" href="vendor/material.css"> -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/material-design-lite@1.3.0/dist/material.indigo-pink.min.css">
+   <!-- Square card -->
+   <style>
+      .temp-card.mdl-card {
+         width: 320px;
+         height: 50px;
+         padding-bottom: 48px;
+      }
+      .temp-card > .mdl-card__title {
+         text-align: center;
+         color: #fff;
+         background:
+            url('../assets/demos/dog.png') bottom right 15% no-repeat #e93636;
+      }
+      .threshold-card.mdl-card {
+         width: 320px;
+         height: 260px;
+      }
+      .threshold-card > .mdl-card__title {
+         text-align: center;
+         color: #fff;
+         background:
+            url('../assets/demos/dog.png') bottom right 15% no-repeat #e93636;
+      }
+      .mdl-layout__content {
+         text-align: center;
+      }
+      .page-content {
+         padding-top: 28px;
+         display: inline-block;         
+      }
+   </style>   
+
+   <!-- Always shows a header, even in smaller screens. -->
+   <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <header class="mdl-layout__header">
+      <div class="mdl-layout__header-row">
+         <!-- Title -->
+         <span class="mdl-layout-title">Defuma_IoT</span>
+         <!-- Add spacer, to align navigation to the right -->
+         <div class="mdl-layout-spacer"></div>
+         <!-- Navigation. We hide it in small screens. -->
+         <nav class="mdl-navigation mdl-layout--large-screen-only">
+            <a class="mdl-navigation__link" href="">Home</a>
+            <a class="mdl-navigation__link" href="https://github.com/lgmarin/defuma_IoT">Github</a>
+            <a class="mdl-navigation__link" href="">Esquecer Wifi</a>
+         </nav>
+      </div>
+      </header>
+      <div class="mdl-layout__drawer">
+      <span class="mdl-layout-title">Defuma_IoT</span>
+      <nav class="mdl-navigation">
+         <a class="mdl-navigation__link" href="">Home</a>
+         <a class="mdl-navigation__link" href="https://github.com/lgmarin/defuma_IoT">Github</a>
+         <a class="mdl-navigation__link" href="">Esquecer Wifi</a>
+      </nav>
+      </div>
+      <main class="mdl-layout__content">
+      <div class="page-content">
+
+         <div class="mdl-grid">
+            <div class="temp-card mdl-card mdl-shadow--2dp">
+               <div class="mdl-card__title">
+                  <h2 class="mdl-card__title-text">Temperatura</h2>
+               </div>
+               <div class="mdl-card__supporting-text">
+                  <h2>%TEMPERATURE% &deg;C</h2>
+               </div>
+            </div>
+         </div>
+         <div class="mdl-grid">
+            <div class="threshold-card mdl-card mdl-shadow--2dp">
+               <div class="mdl-card__title">
+                  <h2 class="mdl-card__title-text">Limites</h2>
+               </div>
+               <div class="mdl-card__supporting-text">
+                  <form action="#">
+                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                       <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="max_temp" name="threshold_max" value="%THRESHOLD_MAX%" required>
+                       <label class="mdl-textfield__label" for="max_temp">Máximo</label>
+                       <span class="mdl-textfield__error">Valor tem que ser um número!</span>
+                     </div>
+                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="temp_min" name="threshold_min" value="%THRESHOLD_MIN%" required>
+                        <label class="mdl-textfield__label" for="temp_min">Mínimo</label>
+                        <span class="mdl-textfield__error">Valor tem que ser um número!</span>
+                     </div>
+                     <br/>
+                     <input class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" type="submit" value="Enviar">              
+                   </form>
+               </div>
+            </div>
+         </div>
+
+      </div>
+      </main>
+   </div>
+
+ 
+	<!-- <script src="vendor/material.js"></script> -->
+	<script src="https://cdn.jsdelivr.net/combine/npm/vue@2.6.10,npm/material-design-lite@1.3.0"></script>
+</body>
+</html>
