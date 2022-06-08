@@ -37,6 +37,7 @@ Development of a data monitoring for a meat smoker:
 * TM1637 by Smougenot - For displaying data in the display.
 * [ESPAsyncTCP](https://github.com/me-no-dev/ESPAsyncTCP) - Base library for ESPAsyncWebServer.
 * [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer) - An Async Web Server implementation for the ESP8266.
+* [ESPAsync_WiFiManager](https://github.com/khoih-prog/ESPAsync_WiFiManager) - An Async Wifi Manager to setup the Wifi Information.
 
 ## References
 

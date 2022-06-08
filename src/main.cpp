@@ -27,10 +27,6 @@ float temperature = 0;
 // BUZZ -> D1 - GPIO5
 int BUZZ = 5;
 
-// WebServer Configuration
-const char* ssid = "Your_SSID";   //replace with your SSID
-const char* password = "Your_Password";    //replace with your password
-
 String temp_low = "24.0";
 String temp_high = "26.0";
 String last_temperature;
