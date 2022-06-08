@@ -4,7 +4,6 @@
 #include <ESPAsync_WiFiManager.h>
 #include "LittleFS.h"
 
-#include <index_html.h>
 #include <read_temp.h>
 #include <file_utils.h>
 
@@ -101,6 +100,8 @@ void setup(){
   display.clear();
 
   // Configure Server Async calls
+  server.serveStatic("/", LittleFS, "/");
+
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     //request->send_P(200, "text/html", index_html, processor);
