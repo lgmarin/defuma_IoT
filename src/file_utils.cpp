@@ -72,13 +72,13 @@ int calcChecksum(uint8_t* address, uint16_t sizeToCalc)
 
 bool loadConfigData()
 {
-  File file = FileFS.open(CONFIG_FILENAME, "r");
+  File file = LittleFS.open(CONFIG_FILENAME, "r");
   Serial.println(F("LoadWiFiCfgFile "));
 
   memset((void *) &WM_config,       0, sizeof(WM_config));
 
   // New in v1.4.0
-  memset((void *) &WM_STA_IPconfig, 0, sizeof(WM_STA_IPconfig));
+  //memset((void *) &WM_STA_IPconfig, 0, sizeof(WM_STA_IPconfig));
   //////
 
   if (file)
@@ -115,7 +115,7 @@ bool loadConfigData()
 
 void saveConfigData()
 {
-  File file = FileFS.open(CONFIG_FILENAME, "w");
+  File file = LittleFS.open(CONFIG_FILENAME, "w");
   Serial.println(F("SaveWiFiCfgFile "));
 
   if (file)
