@@ -58,42 +58,6 @@ void initFS() {
   }
 }
 
-// Read File from LittleFS
-String readFile(fs::FS &fs, const char * path){
-  Serial.printf("Reading file: %s\r\n", path);
-
-  File file = fs.open(path, "r");
-  if(!file || file.isDirectory()){
-    Serial.println("- failed to open file for reading");
-    return String();
-  }
-
-  String fileContent;
-  while(file.available()){
-    fileContent = file.readStringUntil('\n');
-    break;
-  }
-  file.close();
-  return fileContent;
-}
-
-// Write file to LittleFS
-void writeFile(fs::FS &fs, const char * path, const char * message){
-  Serial.printf("Writing file: %s\r\n", path);
-
-  File file = fs.open(path, "w");
-  if(!file){
-    Serial.println("- failed to open file for writing");
-    return;
-  }
-  if(file.print(message)){
-    Serial.println("- file written");
-  } else {
-    Serial.println("- frite failed");
-  }
-  file.close();
-}
-
 int calcChecksum(uint8_t* address, uint16_t sizeToCalc)
 {
   uint16_t checkSum = 0;
@@ -109,7 +73,7 @@ int calcChecksum(uint8_t* address, uint16_t sizeToCalc)
 bool loadConfigData()
 {
   File file = FileFS.open(CONFIG_FILENAME, "r");
-  LOGERROR(F("LoadWiFiCfgFile "));
+  Serial.println(F("LoadWiFiCfgFile "));
 
   memset((void *) &WM_config,       0, sizeof(WM_config));
 
@@ -122,28 +86,28 @@ bool loadConfigData()
     file.readBytes((char *) &WM_config,   sizeof(WM_config));
 
     // New in v1.4.0
-    file.readBytes((char *) &WM_STA_IPconfig, sizeof(WM_STA_IPconfig));
+    //file.readBytes((char *) &WM_STA_IPconfig, sizeof(WM_STA_IPconfig));
     //////
 
     file.close();
-    LOGERROR(F("OK"));
+    Serial.println(F("OK"));
 
     if ( WM_config.checksum != calcChecksum( (uint8_t*) &WM_config, sizeof(WM_config) - sizeof(WM_config.checksum) ) )
     {
-      LOGERROR(F("WM_config checksum wrong"));
+      Serial.println(F("WM_config checksum wrong"));
       
       return false;
     }
     
     // New in v1.4.0
-    displayIPConfigStruct(WM_STA_IPconfig);
+    //displayIPConfigStruct(WM_STA_IPconfig);
     //////
 
     return true;
   }
   else
   {
-    LOGERROR(F("failed"));
+    Serial.println(F("failed"));
 
     return false;
   }
@@ -152,7 +116,7 @@ bool loadConfigData()
 void saveConfigData()
 {
   File file = FileFS.open(CONFIG_FILENAME, "w");
-  LOGERROR(F("SaveWiFiCfgFile "));
+  Serial.println(F("SaveWiFiCfgFile "));
 
   if (file)
   {
@@ -160,17 +124,17 @@ void saveConfigData()
     
     file.write((uint8_t*) &WM_config, sizeof(WM_config));
 
-    displayIPConfigStruct(WM_STA_IPconfig);
+    //displayIPConfigStruct(WM_STA_IPconfig);
 
     // New in v1.4.0
-    file.write((uint8_t*) &WM_STA_IPconfig, sizeof(WM_STA_IPconfig));
+    //file.write((uint8_t*) &WM_STA_IPconfig, sizeof(WM_STA_IPconfig));
     //////
 
     file.close();
-    LOGERROR(F("OK"));
+    Serial.println(F("OK"));
   }
   else
   {
-    LOGERROR(F("failed"));
+    Serial.println(F("failed"));
   }
 }
