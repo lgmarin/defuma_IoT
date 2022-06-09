@@ -7,6 +7,10 @@
 #include <read_temp.h>
 #include <file_utils.h>
 
+#define CONFIG_FILENAME F("/wifi_cred.dat")
+// Indicates whether ESP has WiFi credentials saved from previous session, or double reset detected
+bool initialConfig = false;
+
 // USING GPIO PINS FOR ESP12 Compatibility!
 // D# Pins correspond to nodeMCU V1.2 pins
 // TM1637 4d Display Pins
