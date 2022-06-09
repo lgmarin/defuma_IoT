@@ -11,10 +11,10 @@
 </head>
  
 <body>
-	<link rel="stylesheet" href="vendor/google-fonts.css">
-	<link rel="stylesheet" href="vendor/material.css">
-	<!-- <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/material-design-lite@1.3.0/dist/material.indigo-pink.min.css"> -->
+	<!-- <link rel="stylesheet" href="vendor/google-fonts.css">
+	<link rel="stylesheet" href="vendor/material.css"> -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/material-design-lite@1.3.0/dist/material.indigo-pink.min.css">
    <link rel="stylesheet" type="text/css" href="style.css">
 
    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -34,46 +34,43 @@
       <main class="mdl-layout__content">
       <div class="page-content">
 
-         <div class="mdl-grid">
-            <div class="temp-card mdl-card mdl-shadow--2dp">
-               <div class="mdl-card__title">
-                  <h2 class="mdl-card__title-text">Temperatura</h2>
+         <div class="mdl-grid portfolio-max-width">
+               <div class="mdl-cell temp-card mdl-card mdl-shadow--4dp">
+                  <div class="mdl-card__title">
+                     <h2 class="mdl-card__title-text">Temperatura</h2>
+                  </div>
+                  <div class="mdl-card__supporting-text">
+                     <h2>%TEMPERATURE% &deg;C</h2>
+                  </div>
                </div>
-               <div class="mdl-card__supporting-text">
-                  <h2>%TEMPERATURE% &deg;C</h2>
-               </div>
-            </div>
-         </div>
 
-         <div class="mdl-grid">
-            <div class="threshold-card mdl-card mdl-shadow--2dp">
-               <div class="mdl-card__title">
-                  <h2 class="mdl-card__title-text">Limites</h2>
-               </div>
-               <div class="mdl-card__supporting-text">
-                  <form action="/get">
-                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                       <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="max_temp" name="threshold_max" value="%THRESHOLD_MAX%" required>
-                       <label class="mdl-textfield__label" for="max_temp">Máximo</label>
-                       <span class="mdl-textfield__error">Valor tem que ser um número!</span>
-                     </div>
-                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="temp_min" name="threshold_min" value="%THRESHOLD_MIN%" required>
-                        <label class="mdl-textfield__label" for="temp_min">Mínimo</label>
+               <div class="mdl-cell threshold-card mdl-card mdl-shadow--4dp">
+                  <div class="mdl-card__title">
+                     <h2 class="mdl-card__title-text">Limites</h2>
+                  </div>
+                  <div class="mdl-card__supporting-text">
+                     <form action="/get">
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="max_temp" name="threshold_max" value="%THRESHOLD_MAX%" required>
+                        <label class="mdl-textfield__label" for="max_temp">Máximo</label>
                         <span class="mdl-textfield__error">Valor tem que ser um número!</span>
-                     </div>
-                     <br/>
-                     <input class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" type="submit" value="Enviar">              
-                   </form>
+                        </div>
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                           <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="temp_min" name="threshold_min" value="%THRESHOLD_MIN%" required>
+                           <label class="mdl-textfield__label" for="temp_min">Mínimo</label>
+                           <span class="mdl-textfield__error">Valor tem que ser um número!</span>
+                        </div>
+                        <br/>
+                        <input class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" type="submit" value="Enviar">              
+                     </form>
+                  </div>
                </div>
-            </div>
          </div>
-
       </div>
       </main>
    </div>
-	<script src="vendor/material.js"></script>
-	<!-- <script src="https://cdn.jsdelivr.net/combine/npm/vue@2.6.10,npm/material-design-lite@1.3.0"></script> -->
+	<!-- <script src="vendor/material.js"></script> -->
+	<script src="https://cdn.jsdelivr.net/combine/npm/vue@2.6.10,npm/material-design-lite@1.3.0"></script>
    <script src="script.js"></script>
 </body>
 </html>
