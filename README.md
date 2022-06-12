@@ -13,6 +13,19 @@ To acquire a good quality smoked meat, the amount of smoke produced, and mainly 
 
 The idea here is to have a controller that will display the smoker temperature with a buzzer to signalize the low and high temperature drops. The base system will be developed using an ESP8266 board, that allows for a Wifi Access Point connection that will expose a Web Server that will also display the temperature and allow to define the temperature thresholds.
 
+## Schematics and List of Materials
+
+![CHURRASQUEIRA CONTROLE REMOTO](/img/schematics_schem.png "Schematics, BOM bellow!")
+
+| Label | Part Type | Properties |
+|-----|-----|---|
+|C1|Capacitor Polarized|Electrolytic 10uf 25v|
+|J1|Piezo Speaker|-|
+|R1-R4|10kΩ Resistor|Tolerance ±5%, Resistance 10kΩ|
+|U1|ESP8266 WiFi Module|ESP12F|
+|U1|MAX6675|chip MAX6675; interface SPI|
+|U1|TM1637|4-digit 8-segment Display and Driver|
+
 
 ## Objectives
 
