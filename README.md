@@ -64,3 +64,4 @@ Development of a data monitoring for a meat smoker:
 * [Async WifiManager](https://stonez56.blogspot.com/2021/07/asyncwifimanager-elegantota-esp8266.html)
 * [Plot Sensor Data](https://randomnerdtutorials.com/esp32-esp8266-plot-chart-web-server/)
 * [Material Desing Lite Pages](https://www.luisllamas.es/material-design-esp8266/)
+* [Scan WIFI](https://www.engineersgarage.com/esp8266-post-data-to-thingspeak-server/)
