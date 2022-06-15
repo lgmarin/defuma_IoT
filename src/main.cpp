@@ -124,10 +124,9 @@ void setup(){
     request->send(200, "text/html", "HTTP GET request sent to your ESP.<br><a href=\"/\">Return to Home Page</a>");
   });
 
-  server.on("/reset-wifi", HTTP_GET, [](AsyncWebServerRequest *request){
-    Serial.println("Reseting WIFI settings!");
-    Serial.println("REBOOT ESP8266 to reconnect!");
-  });
+  server.on("/temperature", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/plain", String(temperature).c_str());
+  });  
 
   server.onNotFound(notFound);
   server.begin();    
