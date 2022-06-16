@@ -40,8 +40,8 @@ Development of a data monitoring for a meat smoker:
 |J1|Piezo Speaker|-|
 |R1-R4|10kΩ Resistor|Tolerance ±5%, Resistance 10kΩ|
 |U1|ESP8266 WiFi Module|ESP12F|
-|U1|MAX6675|chip MAX6675; interface SPI|
-|U1|TM1637|4-digit 8-segment Display and Driver|
+|U2|MAX6675|chip MAX6675; interface SPI|
+|U3|TM1637|4-digit 8-segment Display and Driver|
 
 ## Libraries
 
