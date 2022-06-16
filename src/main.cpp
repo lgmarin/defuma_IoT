@@ -28,8 +28,8 @@ float temperature = 0;
 // BUZZ -> D1 - GPIO5
 int BUZZ = 5;
 
-String temp_low = "24.0";
-String temp_high = "26.0";
+String temp_low = "24";
+String temp_high = "26";
 String last_temperature;
 
 void notFound(AsyncWebServerRequest *request) {
