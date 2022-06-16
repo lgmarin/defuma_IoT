@@ -60,11 +60,12 @@ unsigned long previousMillis = 0;
 const long interval = 1000;
 
 void setup(){
-  //Intiate SPI transaction
-  SPI.begin();
   Serial.begin(9600);
   while (!Serial);
   delay(200);
+
+  //Intiate SPI transaction
+  SPI.begin();
 
   // Init LittleFS
   initFS();

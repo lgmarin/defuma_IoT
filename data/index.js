@@ -7,5 +7,5 @@ setInterval(function ( ) {
         };
         xhttp.open("GET", "/temperature", true);
         xhttp.send();
-    }, 10000 
+    }, 3000 
 );
