@@ -111,7 +111,7 @@ void setup(){
     request->send(LittleFS, "/index.html", "text/html", false, processor);
   });
 
-  server.on("/get", HTTP_GET, [] (AsyncWebServerRequest *request) {
+  server.on("/update", HTTP_GET, [] (AsyncWebServerRequest *request) {
     if (request->hasParam("threshold_max") && request->hasParam("threshold_min")) {
       temp_high = request->getParam("threshold_max")->value();
       temp_low = request->getParam("threshold_min")->value();

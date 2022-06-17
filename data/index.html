@@ -65,7 +65,8 @@
             </div>
             <div class="mdl-card__supporting-text mdl-color-text--grey-600">
               <div>
-                <form action="/get">
+                <iframe name="dummyframe" id="dummyframe" style="display: none"></iframe>
+                <form action="/update" target="dummyframe">
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                     <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="max_temp" name="threshold_max" value="%THRESHOLD_MAX%" required>
                     <label class="mdl-textfield__label" for="max_temp">Máximo</label>
