@@ -126,7 +126,7 @@ void setup(){
   });
 
   server.on("/temperature", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "text/plain", String(round(temperature)).c_str());
+    request->send_P(200, "text/plain", String(temperature).c_str());
   });
 
   server.onNotFound(notFound);
@@ -155,7 +155,7 @@ void loop(){
     }
 
     // Keep track of the last temperature read
-    last_temperature = String(round(temperature));
+    last_temperature = String(temperature);
     
     if(temperature > temp_high.toFloat() && temperature != NAN){
       String message = String("Temperature is too high. Current temperature: ") + 

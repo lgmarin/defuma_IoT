@@ -43,6 +43,10 @@ Development of a data monitoring for a meat smoker:
 |U2|MAX6675|chip MAX6675; interface SPI|
 |U3|TM1637|4-digit 8-segment Display and Driver|
 
+## Material Design FrontEnd
+
+![CHURRASQUEIRA CONTROLE REMOTO](/img/screen_phone.png "Front End")
+
 ## Libraries
 
 * SPI (Arduino IDE Default Libraries) - For reading the MAX6675 data through the SPI Bus.
