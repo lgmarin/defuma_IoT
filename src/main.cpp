@@ -11,8 +11,8 @@
 // D# Pins correspond to nodeMCU V1.2 pins
 // TM1637 4d Display Pins
 // SCLK -> D2 - GPIO4
-// DIO  -> D7 - GPIO13
-int tm_DIO = 13;
+// DIO  -> D1 - GPIO5
+int tm_DIO = 5;
 int tm_CLK = 4;
 
 TM1637Display display(tm_CLK, tm_DIO);
@@ -20,13 +20,13 @@ TM1637Display display(tm_CLK, tm_DIO);
 // Define main pins for MAX6675
 // SCLK -> D5 - GPIO14
 // MISO -> D6 - GPIO12
-// CS   -> D8 - GPIO15
-int max_CS = 15;
+// CS   -> D7 - GPIO13
+int max_CS = 13;
 float temperature = 0;
 
 // Buzzer PIN
-// BUZZ -> D1 - GPIO5
-int BUZZ = 5;
+// BUZZ -> D0 - GPIO16
+int BUZZ = 16;
 
 String temp_low = "24";
 String temp_high = "26";
