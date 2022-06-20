@@ -28,7 +28,7 @@ float temperature = 0;
 // BUZZ -> D0 - GPIO16
 int BUZZ = 16;
 
-String temp_low = "24";
+String temp_low = "20";
 String temp_high = "26";
 String last_temperature;
 
@@ -42,7 +42,6 @@ DNSServer dnsServer;
 
 // String processor to be used to parse data to the web browser
 String processor(const String& var){
-
   if(var == "TEMPERATURE"){
     return last_temperature;
   }
