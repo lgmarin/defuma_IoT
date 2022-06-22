@@ -1,11 +1,13 @@
-#include <SPI.h>
-#include <TM1637Display.h>
+#include "LittleFS.h"
+#include <file_utils.h>
+
 #include <ESPAsyncWebServer.h>
 #include <ESPAsync_WiFiManager.h>
-#include "LittleFS.h"
 
+#include <SPI.h>
+#include <TM1637Display.h>
 #include <read_temp.h>
-#include <file_utils.h>
+
 
 // USING GPIO PINS FOR ESP12 Compatibility!
 // D# Pins correspond to nodeMCU V1.2 pins
@@ -84,7 +86,8 @@ void setup(){
   ESPAsync_WiFiManager ESPAsync_wifiManager(&server, &dnsServer, "defuma_iot");
   //ESPAsync_wifiManager.resetSettings();   //reset saved settings
   Serial.println("Trying to connect to previously saved AP...");
-  ESPAsync_wifiManager.autoConnect("defuma_iot");
+  //ESPAsync_wifiManager.autoConnect("defuma_iot");
+  ESPAsync_wifiManager.setConfigPortalTimeout(120);
 
   if (WiFi.status() == WL_CONNECTED)
   {

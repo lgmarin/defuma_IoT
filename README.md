@@ -69,3 +69,6 @@ Development of a data monitoring for a meat smoker:
 * [Plot Sensor Data](https://randomnerdtutorials.com/esp32-esp8266-plot-chart-web-server/)
 * [Material Desing Lite Pages](https://www.luisllamas.es/material-design-esp8266/)
 * [Scan WIFI](https://www.engineersgarage.com/esp8266-post-data-to-thingspeak-server/)
+
+https://github.com/bblanchon/ArduinoJson/blob/6.x/examples/JsonConfigFile/JsonConfigFile.ino
+https://github.com/khoih-prog/ESPAsync_WiFiManager/blob/master/examples/Async_ConfigOnStartup/Async_ConfigOnStartup.ino
