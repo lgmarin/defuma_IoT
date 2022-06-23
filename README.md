@@ -72,3 +72,4 @@ Development of a data monitoring for a meat smoker:
 
 https://github.com/bblanchon/ArduinoJson/blob/6.x/examples/JsonConfigFile/JsonConfigFile.ino
 https://github.com/khoih-prog/ESPAsync_WiFiManager/blob/master/examples/Async_ConfigOnStartup/Async_ConfigOnStartup.ino
+https://github.com/ayushsharma82/ESPConnect/blob/main/examples/AutoConnect/AutoConnect.ino
