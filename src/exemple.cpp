@@ -179,30 +179,12 @@ void initSTAIPConfigStruct(WiFi_STA_IPConfig &in_WM_STA_IPconfig)
   in_WM_STA_IPconfig._sta_static_ip   = stationIP;
   in_WM_STA_IPconfig._sta_static_gw   = gatewayIP;
   in_WM_STA_IPconfig._sta_static_sn   = netMask;
-#if USE_CONFIGURABLE_DNS  
-  in_WM_STA_IPconfig._sta_static_dns1 = dns1IP;
-  in_WM_STA_IPconfig._sta_static_dns2 = dns2IP;
-#endif
-}
-
-void displayIPConfigStruct(WiFi_STA_IPConfig in_WM_STA_IPconfig)
-{
-  LOGERROR3(F("stationIP ="), in_WM_STA_IPconfig._sta_static_ip, ", gatewayIP =", in_WM_STA_IPconfig._sta_static_gw);
-  LOGERROR1(F("netMask ="), in_WM_STA_IPconfig._sta_static_sn);
-#if USE_CONFIGURABLE_DNS
-  LOGERROR3(F("dns1IP ="), in_WM_STA_IPconfig._sta_static_dns1, ", dns2IP =", in_WM_STA_IPconfig._sta_static_dns2);
-#endif
 }
 
 void configWiFi(WiFi_STA_IPConfig in_WM_STA_IPconfig)
 {
-  #if USE_CONFIGURABLE_DNS  
-    // Set static IP, Gateway, Subnetmask, DNS1 and DNS2. New in v1.0.5
-    WiFi.config(in_WM_STA_IPconfig._sta_static_ip, in_WM_STA_IPconfig._sta_static_gw, in_WM_STA_IPconfig._sta_static_sn, in_WM_STA_IPconfig._sta_static_dns1, in_WM_STA_IPconfig._sta_static_dns2);  
-  #else
     // Set static IP, Gateway, Subnetmask, Use auto DNS1 and DNS2.
     WiFi.config(in_WM_STA_IPconfig._sta_static_ip, in_WM_STA_IPconfig._sta_static_gw, in_WM_STA_IPconfig._sta_static_sn);
-  #endif 
 }
 
 ///////////////////////////////////////////
@@ -376,7 +358,7 @@ bool loadConfigData(const char *filename)
         file.readBytes((char *) &Thr_config, sizeof(Thr_config));
 
         file.close();
-        LOGERROR(F("OK"));
+        LOGERROR(F("Config File Read. Checksum check..."));
 
         if ( WM_config.checksum != calcChecksum( (uint8_t*) &WM_config, sizeof(WM_config) - sizeof(WM_config.checksum) ) )
         {
@@ -396,26 +378,22 @@ bool loadConfigData(const char *filename)
 void saveConfigData(const char *filename)
 {
     File file = FileFS.open(filename, "w");
-    LOGERROR(F("Loading Config File..."));
+    LOGERROR(F("Saving Config File..."));
 
     if (file)
     {
         WM_config.checksum = calcChecksum( (uint8_t*) &WM_config, sizeof(WM_config) - sizeof(WM_config.checksum) );
 
         file.write((uint8_t*) &WM_config, sizeof(WM_config));
-
-        displayIPConfigStruct(WM_STA_IPconfig);
-
-        // New in v1.4.0
         file.write((uint8_t*) &WM_STA_IPconfig, sizeof(WM_STA_IPconfig));
-        //////
+        file.write((uint8_t*) &Thr_config, sizeof(Thr_config));
 
         file.close();
-        LOGERROR(F("OK"));
+        LOGERROR(F("Config File Saved!"));
     }
     else
     {
-        LOGERROR(F("failed"));
+        LOGERROR(F("Saving Config File Failed!"));
     }
 }
 
