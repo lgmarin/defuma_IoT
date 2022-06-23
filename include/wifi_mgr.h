@@ -1,7 +1,6 @@
 #ifndef wifi_mgr
 #define wifi_mgr
 
-
 #define LED_ON      LOW
 #define LED_OFF     HIGH
 
@@ -49,5 +48,7 @@
 
 // New in v1.0.11
 #define USING_CORS_FEATURE          false
+
+
 
 #endif

@@ -27,10 +27,6 @@
 //needed for library
 #include <DNSServer.h>
 
-// From v1.1.0
-#include <ESP8266WiFiMulti.h>
-ESP8266WiFiMulti wifiMulti;
-
 #include <LittleFS.h>
 FS* filesystem      =   &LittleFS;
 #define FileFS          LittleFS
@@ -151,64 +147,6 @@ void configWiFi(WiFi_STA_IPConfig in_WM_STA_IPconfig)
 
 ///////////////////////////////////////////
 
-uint8_t connectMultiWiFi()
-{
-    // For ESP8266, this better be 2200 to enable connect the 1st time
-    #define WIFI_MULTI_1ST_CONNECT_WAITING_MS             2200L
-    #define WIFI_MULTI_CONNECT_WAITING_MS                  500L
-
-    uint8_t status;
-
-    //WiFi.mode(WIFI_STA);
-
-    LOGERROR(F("ConnectMultiWiFi with :"));
-
-    if ( (Router_SSID != "") && (Router_Pass != "") )
-    {
-        LOGERROR3(F("* Flash-stored Router_SSID = "), Router_SSID, F(", Router_Pass = "), Router_Pass );
-        LOGERROR3(F("* Add SSID = "), Router_SSID, F(", PW = "), Router_Pass );
-        wifiMulti.addAP(Router_SSID.c_str(), Router_Pass.c_str());
-    }
-
-    for (uint8_t i = 0; i < NUM_WIFI_CREDENTIALS; i++)
-    {
-        // Don't permit NULL SSID and password len < MIN_AP_PASSWORD_SIZE (8)
-        if ( (String(WM_config.WiFi_Creds[i].wifi_ssid) != "") && (strlen(WM_config.WiFi_Creds[i].wifi_pw) >= MIN_AP_PASSWORD_SIZE) )
-        {
-            LOGERROR3(F("* Additional SSID = "), WM_config.WiFi_Creds[i].wifi_ssid, F(", PW = "), WM_config.WiFi_Creds[i].wifi_pw );
-        }
-    }
-
-    LOGERROR(F("Connecting MultiWifi..."));
-
-    int i = 0;
-    status = wifiMulti.run();
-    delay(WIFI_MULTI_1ST_CONNECT_WAITING_MS);
-
-    while ( ( i++ < 20 ) && ( status != WL_CONNECTED ) )
-    {
-        status = WiFi.status();
-
-        if ( status == WL_CONNECTED )
-            break;
-        else
-            delay(WIFI_MULTI_CONNECT_WAITING_MS);
-        }
-
-        if ( status == WL_CONNECTED )
-        {
-            LOGERROR1(F("WiFi connected after time: "), i);
-            LOGERROR3(F("SSID:"), WiFi.SSID(), F(",RSSI="), WiFi.RSSI());
-            LOGERROR3(F("Channel:"), WiFi.channel(), F(",IP address:"), WiFi.localIP() );
-        }
-        else
-        {
-            LOGERROR(F("WiFi not connected"));   
-            ESP.reset();
-    }
-
-return status;
-}
 
 void toggleLED()
 {
@@ -241,7 +179,7 @@ void check_WiFi()
     if ( (WiFi.status() != WL_CONNECTED) )
     {
         Serial.println(F("\nWiFi lost. Call connectMultiWiFi in loop"));
-        connectMultiWiFi();
+        //connectMultiWiFi();
     }
 }  
 
@@ -420,16 +358,6 @@ void setup()
 
     bool configDataLoaded = false;
 
-    // From v1.1.0, Don't permit NULL password
-    if ( (Router_SSID != "") && (Router_Pass != "") )
-    {
-        LOGERROR3(F("* Add SSID = "), Router_SSID, F(", PW = "), Router_Pass);
-        wifiMulti.addAP(Router_SSID.c_str(), Router_Pass.c_str());
-        
-        ESPAsync_wifiManager.setConfigPortalTimeout(120); //If no access point name has been previously entered disable timeout.
-        Serial.println(F("Got ESP Self-Stored Credentials. Timeout 120s for Config Portal"));
-    }
-
     if (loadConfigData(config_file))
     {
         configDataLoaded = true;
@@ -486,7 +414,7 @@ void setup()
             if ( (String(WM_config.WiFi_Creds[i].wifi_ssid) != "") && (strlen(WM_config.WiFi_Creds[i].wifi_pw) >= MIN_AP_PASSWORD_SIZE) )
             {
                 LOGERROR3(F("* Add SSID = "), WM_config.WiFi_Creds[i].wifi_ssid, F(", PW = "), WM_config.WiFi_Creds[i].wifi_pw );
-                wifiMulti.addAP(WM_config.WiFi_Creds[i].wifi_ssid, WM_config.WiFi_Creds[i].wifi_pw);
+                //wifiMulti.addAP(WM_config.WiFi_Creds[i].wifi_ssid, WM_config.WiFi_Creds[i].wifi_pw);
             }
         }
 
@@ -523,7 +451,7 @@ void setup()
         {
         Serial.println(F("ConnectMultiWiFi in setup"));
         
-        connectMultiWiFi();
+        //connectMultiWiFi();
         }
     }
 

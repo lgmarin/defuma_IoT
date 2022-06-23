@@ -1,6 +1,26 @@
 #include "LittleFS.h"
 #include <wifi_mgr.h>
 
+typedef struct
+{
+  char wifi_ssid[SSID_MAX_LEN];
+  char wifi_pw  [PASS_MAX_LEN];
+} WiFi_Credentials;
+
+typedef struct
+{
+  char temp_max[3];
+  char temp_min[3];
+} Thr_Config;
+
+typedef struct
+{
+  WiFi_Credentials  WiFi_Creds [NUM_WIFI_CREDENTIALS];
+  char TZ_Name[TZNAME_MAX_LEN];     // "America/Toronto"
+  char TZ[TIMEZONE_MAX_LEN];        // "EST5EDT,M3.2.0,M11.1.0"
+  uint16_t checksum;
+} WM_Config;
+
 // Initialize LittleFS
 void initFS() {
   if (!LittleFS.begin()) {
@@ -13,68 +33,68 @@ void initFS() {
 
 int calcChecksum(uint8_t* address, uint16_t sizeToCalc)
 {
-    uint16_t checkSum = 0;
+  uint16_t checkSum = 0;
 
-    for (uint16_t index = 0; index < sizeToCalc; index++)
-    {
-        checkSum += * ( ( (byte*) address ) + index);
-    }
+  for (uint16_t index = 0; index < sizeToCalc; index++)
+  {
+    checkSum += * ( ( (byte*) address ) + index);
+  }
 
-    return checkSum;
+  return checkSum;
 }
 
 bool loadConfigData(const char *filename)
 {
-    File file = LittleFS.open(filename, "r");
-    Serial.println(F("Loading Config File..."));
+  File file = LittleFS.open(filename, "r");
+  Serial.println(F("Loading Config File..."));
 
-    // Load Wifi Credentials and IP Configuration
-    memset((void *) &WM_config,       0, sizeof(WM_config));
-    memset((void *) &WM_STA_IPconfig, 0, sizeof(WM_STA_IPconfig));
-    memset((void *) &Thr_config,      0, sizeof(Thr_config));
+  // Load Wifi Credentials and IP Configuration
+  memset((void *) &WM_config,       0, sizeof(WM_config));
+  memset((void *) &WM_STA_IPconfig, 0, sizeof(WM_STA_IPconfig));
+  memset((void *) &Thr_config,      0, sizeof(Thr_config));
 
-    if (file)
+  if (file)
+  {
+    file.readBytes((char *) &WM_config,   sizeof(WM_config));
+    file.readBytes((char *) &WM_STA_IPconfig, sizeof(WM_STA_IPconfig));
+    file.readBytes((char *) &Thr_config, sizeof(Thr_config));
+
+    file.close();
+    Serial.println(F("Config File Read. Checksum check..."));
+
+    if ( WM_config.checksum != calcChecksum( (uint8_t*) &WM_config, sizeof(WM_config) - sizeof(WM_config.checksum) ) )
     {
-        file.readBytes((char *) &WM_config,   sizeof(WM_config));
-        file.readBytes((char *) &WM_STA_IPconfig, sizeof(WM_STA_IPconfig));
-        file.readBytes((char *) &Thr_config, sizeof(Thr_config));
-
-        file.close();
-        Serial.println(F("Config File Read. Checksum check..."));
-
-        if ( WM_config.checksum != calcChecksum( (uint8_t*) &WM_config, sizeof(WM_config) - sizeof(WM_config.checksum) ) )
-        {
-            Serial.println(F("Wifi Credentials checksum wrong!"));
-            return false;
-        }
-        Serial.println(F("Config File Loaded!"));
-        return true;
+      Serial.println(F("Wifi Credentials checksum wrong!"));
+      return false;
     }
-    else
-    {
-        Serial.println(F("Loading Config File Failed!"));
-        return false;
-    }
+    Serial.println(F("Config File Loaded!"));
+    return true;
+  }
+  else
+  {
+    Serial.println(F("Loading Config File Failed!"));
+    return false;
+  }
 }
 
 void saveConfigData(const char *filename)
 {
-    File file = LittleFS.open(filename, "w");
-    Serial.println(F("Saving Config File..."));
+  File file = LittleFS.open(filename, "w");
+  Serial.println(F("Saving Config File..."));
 
-    if (file)
-    {
-        WM_config.checksum = calcChecksum( (uint8_t*) &WM_config, sizeof(WM_config) - sizeof(WM_config.checksum) );
+  if (file)
+  {
+    WM_config.checksum = calcChecksum( (uint8_t*) &WM_config, sizeof(WM_config) - sizeof(WM_config.checksum) );
 
-        file.write((uint8_t*) &WM_config, sizeof(WM_config));
-        file.write((uint8_t*) &WM_STA_IPconfig, sizeof(WM_STA_IPconfig));
-        file.write((uint8_t*) &Thr_config, sizeof(Thr_config));
+    file.write((uint8_t*) &WM_config, sizeof(WM_config));
+    file.write((uint8_t*) &WM_STA_IPconfig, sizeof(WM_STA_IPconfig));
+    file.write((uint8_t*) &Thr_config, sizeof(Thr_config));
 
-        file.close();
-        Serial.println(F("Config File Saved!"));
-    }
-    else
-    {
-        Serial.println(F("Saving Config File Failed!"));
-    }
+    file.close();
+    Serial.println(F("Config File Saved!"));
+  }
+  else
+  {
+      Serial.println(F("Saving Config File Failed!"));
+  }
 }
