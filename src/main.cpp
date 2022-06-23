@@ -62,10 +62,9 @@ const long interval = 1000;
 
 void setup(){
   Serial.begin(9600);
-  while (!Serial);
   delay(200);
 
-  //Intiate SPI transaction
+ //Intiate SPI transaction
   SPI.begin();
 
   // Init LittleFS
@@ -87,6 +86,7 @@ void setup(){
   //ESPAsync_wifiManager.resetSettings();   //reset saved settings
   Serial.println("Trying to connect to previously saved AP...");
   //ESPAsync_wifiManager.autoConnect("defuma_iot");
+  ESPAsync_wifiManager.startConfigPortal("defuma_iot");
   ESPAsync_wifiManager.setConfigPortalTimeout(120);
 
   if (WiFi.status() == WL_CONNECTED)
@@ -99,7 +99,7 @@ void setup(){
       Serial.println(ESPAsync_wifiManager.getStatus(WiFi.status()));
       Serial.println("Can't connect! Entering WiFi config mode...");
       Serial.println("Restart board...");
-      ESP.reset();
+      ESPAsync_wifiManager.startConfigPortal("defuma_iot");
   }
 
   display.clear();
