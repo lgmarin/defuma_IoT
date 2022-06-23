@@ -104,6 +104,8 @@ bool initialConfig = false;
 // You'll loose the feature of dynamically changing from DHCP to static IP, or vice versa
 // You have to explicitly specify false to disable the feature.
 //#define USE_STATIC_IP_CONFIG_IN_CP          false
+#define USE_DHCP_IP               true
+#define USE_CONFIGURABLE_DNS      false
 
 // Use false to disable NTP config. Advisable when using Cellphone, Tablet to access Config Portal.
 // See Issue 23: On Android phone ConfigPortal is unresponsive (https://github.com/khoih-prog/ESP_WiFiManager/issues/23)
@@ -121,58 +123,18 @@ bool initialConfig = false;
 // New in v1.0.11
 #define USING_CORS_FEATURE          false
 
-////////////////////////////////////////////
-
-// Use USE_DHCP_IP == true for dynamic DHCP IP, false to use static IP which you have to change accordingly to your network
-#if (defined(USE_STATIC_IP_CONFIG_IN_CP) && !USE_STATIC_IP_CONFIG_IN_CP)
-  // Force DHCP to be true
-  #if defined(USE_DHCP_IP)
-    #undef USE_DHCP_IP
-  #endif
-  #define USE_DHCP_IP     true
-#else
-  // You can select DHCP or Static IP here
-  #define USE_DHCP_IP     true
-  //#define USE_DHCP_IP     false
-#endif
-
-#if ( USE_DHCP_IP )
-  // Use DHCP
-  
-  #if (_ESPASYNC_WIFIMGR_LOGLEVEL_ > 3)
-    #warning Using DHCP IP
-  #endif
-  
-  IPAddress stationIP   = IPAddress(0, 0, 0, 0);
-  IPAddress gatewayIP   = IPAddress(192, 168, 2, 1);
-  IPAddress netMask     = IPAddress(255, 255, 255, 0);
-  
-#else
-    // Use static IP
-    
-    #if (_ESPASYNC_WIFIMGR_LOGLEVEL_ > 3)
-        #warning Using static IP
-    #endif
-  
-    IPAddress stationIP   = IPAddress(192, 168, 2, 186);
-  
-    IPAddress gatewayIP   = IPAddress(192, 168, 2, 1);
-    IPAddress netMask     = IPAddress(255, 255, 255, 0);
-#endif
-
-////////////////////////////////////////////
-
-
-#define USE_CONFIGURABLE_DNS      false
+#define HTTP_PORT     80
 
 #include <ESPAsync_WiFiManager.h>               //https://github.com/khoih-prog/ESPAsync_WiFiManager
-
-#define HTTP_PORT     80
 
 // Onboard LED I/O pin on NodeMCU board
 const int PIN_LED = 2; // D4 on NodeMCU and WeMos. GPIO2/ADC12 of ESP32. Controls the onboard LED.
 
 WiFi_STA_IPConfig WM_STA_IPconfig;
+
+IPAddress stationIP   = IPAddress(0, 0, 0, 0);
+IPAddress gatewayIP   = IPAddress(192, 168, 2, 1);
+IPAddress netMask     = IPAddress(255, 255, 255, 0);
 
 void initSTAIPConfigStruct(WiFi_STA_IPConfig &in_WM_STA_IPconfig)
 {
@@ -218,14 +180,6 @@ uint8_t connectMultiWiFi()
     }
 
     LOGERROR(F("Connecting MultiWifi..."));
-
-    //WiFi.mode(WIFI_STA);
-
-    #if !USE_DHCP_IP
-        // New in v1.4.0
-        configWiFi(WM_STA_IPconfig);
-        //////
-    #endif
 
     int i = 0;
     status = wifiMulti.run();
