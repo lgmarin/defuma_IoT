@@ -109,7 +109,6 @@ void setup(){
 
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    //request->send_P(200, "text/html", index_html, processor);
     request->send(LittleFS, "/index.html", "text/html", false, processor);
   });
 

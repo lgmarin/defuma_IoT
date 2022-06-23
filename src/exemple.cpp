@@ -64,13 +64,13 @@ typedef struct
 {
   char wifi_ssid[SSID_MAX_LEN];
   char wifi_pw  [PASS_MAX_LEN];
-}  WiFi_Credentials;
+} WiFi_Credentials;
 
 typedef struct
 {
-  String wifi_ssid;
-  String wifi_pw;
-}  WiFi_Credentials_String;
+  int temp_max;
+  int temp_min;
+} Thr_Config;
 
 #define NUM_WIFI_CREDENTIALS      2
 
@@ -87,8 +87,9 @@ typedef struct
 } WM_Config;
 
 WM_Config         WM_config;
+Thr_Config        Thr_config;
 
-#define  CONFIG_FILENAME              F("/wifi_cred.dat")
+const char* config_file = "/wifi_cred.dat";
 //////
 
 // Indicates whether ESP has WiFi credentials saved from previous session, or double reset detected
@@ -358,53 +359,44 @@ int calcChecksum(uint8_t* address, uint16_t sizeToCalc)
     return checkSum;
 }
 
-bool loadConfigData()
+bool loadConfigData(const char *filename)
 {
-    File file = FileFS.open(CONFIG_FILENAME, "r");
-    LOGERROR(F("LoadWiFiCfgFile "));
+    File file = FileFS.open(filename, "r");
+    LOGERROR(F("Loading Config File..."));
 
+    // Load Wifi Credentials and IP Configuration
     memset((void *) &WM_config,       0, sizeof(WM_config));
-
-    // New in v1.4.0
     memset((void *) &WM_STA_IPconfig, 0, sizeof(WM_STA_IPconfig));
-    //////
+    memset((void *) &Thr_config,      0, sizeof(Thr_config));
 
     if (file)
     {
         file.readBytes((char *) &WM_config,   sizeof(WM_config));
-
-        // New in v1.4.0
         file.readBytes((char *) &WM_STA_IPconfig, sizeof(WM_STA_IPconfig));
-        //////
+        file.readBytes((char *) &Thr_config, sizeof(Thr_config));
 
         file.close();
         LOGERROR(F("OK"));
 
         if ( WM_config.checksum != calcChecksum( (uint8_t*) &WM_config, sizeof(WM_config) - sizeof(WM_config.checksum) ) )
         {
-            LOGERROR(F("WM_config checksum wrong"));
-            
+            LOGERROR(F("Wifi Credentials checksum wrong!"));
             return false;
         }
-
-        // New in v1.4.0
-        displayIPConfigStruct(WM_STA_IPconfig);
-        //////
-
+        LOGERROR(F("Config File Loaded!"));
         return true;
     }
     else
     {
-        LOGERROR(F("failed"));
-
+        LOGERROR(F("Loading Config File Failed!"));
         return false;
     }
 }
 
-void saveConfigData()
+void saveConfigData(const char *filename)
 {
-    File file = FileFS.open(CONFIG_FILENAME, "w");
-    LOGERROR(F("SaveWiFiCfgFile "));
+    File file = FileFS.open(filename, "w");
+    LOGERROR(F("Loading Config File..."));
 
     if (file)
     {
@@ -506,7 +498,7 @@ void setup()
         Serial.println(F("Got ESP Self-Stored Credentials. Timeout 120s for Config Portal"));
     }
 
-    if (loadConfigData())
+    if (loadConfigData(config_file))
     {
         configDataLoaded = true;
         
@@ -570,7 +562,7 @@ void setup()
         ESPAsync_wifiManager.getSTAStaticIPConfig(WM_STA_IPconfig);
         //////
         
-        saveConfigData();
+        saveConfigData(config_file);
 
         initialConfig = true;
     }
@@ -583,7 +575,7 @@ void setup()
     {
         // Load stored data, the addAP ready for MultiWiFi reconnection
         if (!configDataLoaded)
-        loadConfigData();
+        loadConfigData(config_file);
 
         for (uint8_t i = 0; i < NUM_WIFI_CREDENTIALS; i++)
         {
