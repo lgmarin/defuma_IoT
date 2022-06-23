@@ -32,7 +32,18 @@
 ESP8266WiFiMulti wifiMulti;
 
 #include <LittleFS.h>
+FS* filesystem      =   &LittleFS;
+#define FileFS          LittleFS
+#define FS_Name         "LittleFS"
 
+#define ESP_getChipId()   (ESP.getChipId())
+
+#define LED_ON      LOW
+#define LED_OFF     HIGH
+
+// SSID and PW for Config Portal
+String ssid = "ESP_" + String(ESP_getChipId(), HEX);
+//const char* password = "your_password";
 
 // SSID and PW for your Router
 String Router_SSID;
@@ -160,15 +171,7 @@ bool initialConfig = false;
 // Onboard LED I/O pin on NodeMCU board
 const int PIN_LED = 2; // D4 on NodeMCU and WeMos. GPIO2/ADC12 of ESP32. Controls the onboard LED.
 
-WiFi_AP_IPConfig  WM_AP_IPconfig;
 WiFi_STA_IPConfig WM_STA_IPconfig;
-
-void initAPIPConfigStruct(WiFi_AP_IPConfig &in_WM_AP_IPconfig)
-{
-  in_WM_AP_IPconfig._ap_static_ip   = APStaticIP;
-  in_WM_AP_IPconfig._ap_static_gw   = APStaticGW;
-  in_WM_AP_IPconfig._ap_static_sn   = APStaticSN;
-}
 
 void initSTAIPConfigStruct(WiFi_STA_IPConfig &in_WM_STA_IPconfig)
 {
@@ -294,7 +297,6 @@ void heartBeatPrint()
     {
         Serial.print(F(" "));
     }
-    #endif  
 }
 
 void check_WiFi()
@@ -308,11 +310,11 @@ void check_WiFi()
 
 void check_status()
 {
-    static ulong checkstatus_timeout  = 0;
-    static ulong LEDstatus_timeout    = 0;
-    static ulong checkwifi_timeout    = 0;
+    static float checkstatus_timeout  = 0;
+    static float LEDstatus_timeout    = 0;
+    static float checkwifi_timeout    = 0;
 
-    static ulong current_millis;
+    static float current_millis;
 
     #define WIFICHECK_INTERVAL    1000L
 
@@ -467,7 +469,6 @@ void setup()
     unsigned long startedAt = millis();
 
     // New in v1.4.0
-    initAPIPConfigStruct(WM_AP_IPconfig);
     initSTAIPConfigStruct(WM_STA_IPconfig);
     //////
 
@@ -510,7 +511,7 @@ void setup()
         configDataLoaded = true;
         
         ESPAsync_wifiManager.setConfigPortalTimeout(60); //If no access point name has been previously entered disable timeout.
-        Serial.println(F("Got stored Credentials. Timeout 120s for Config Portal"));
+        Serial.println(F("Got stored Credentials. Timeout 60s for Config Portal"));
     }
     else
     {
