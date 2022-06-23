@@ -68,8 +68,8 @@ typedef struct
 
 typedef struct
 {
-  int temp_max;
-  int temp_min;
+  char temp_max[3];
+  char temp_min[3];
 } Thr_Config;
 
 #define NUM_WIFI_CREDENTIALS      2
