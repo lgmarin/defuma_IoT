@@ -15,7 +15,7 @@
 //From v1.0.10, WPA2 passwords can be up to 63 characters long.
 #define PASS_MAX_LEN            64
 
-#define NUM_WIFI_CREDENTIALS      2
+#define NUM_WIFI_CREDENTIALS      1
 
 // Assuming max 49 chars
 #define TZNAME_MAX_LEN            50
@@ -49,6 +49,15 @@
 // New in v1.0.11
 #define USING_CORS_FEATURE          false
 
+// SSID and PW for Config Portal
+const String ssid = "defuma_iot";
+//const char* password = "your_password";
 
+// SSID and PW for your Router
+String Router_SSID;
+String Router_Pass;
+//////
+
+void 
 
 #endif

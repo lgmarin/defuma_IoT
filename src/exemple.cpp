@@ -465,7 +465,7 @@ void setup()
         Serial.println(WiFi.localIP());
     }
     else
-    Serial.println(ESPAsync_wifiManager.getStatus(WiFi.status()));
+        Serial.println(ESPAsync_wifiManager.getStatus(WiFi.status()));
 }
 
 void loop()

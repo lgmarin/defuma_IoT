@@ -1,14 +1,12 @@
-#include "LittleFS.h"
-#include <file_utils.h>
-#include <wifi_mgr.h>
-
+#include <LittleFS.h>
 #include <ESPAsyncWebServer.h>
 #include <ESPAsync_WiFiManager.h>
-
 #include <SPI.h>
 #include <TM1637Display.h>
-#include <read_temp.h>
 
+#include <read_temp.h>
+#include <file_utils.h>
+#include <wifi_mgr.h>
 
 // USING GPIO PINS FOR ESP12 Compatibility!
 // D# Pins correspond to nodeMCU V1.2 pins
@@ -85,10 +83,36 @@ void setup(){
 
   ESPAsync_WiFiManager ESPAsync_wifiManager(&server, &dnsServer, "defuma_iot");
   //ESPAsync_wifiManager.resetSettings();   //reset saved settings
-  Serial.println("Trying to connect to previously saved AP...");
-  //ESPAsync_wifiManager.autoConnect("defuma_iot");
-  ESPAsync_wifiManager.startConfigPortal("defuma_iot");
-  ESPAsync_wifiManager.setConfigPortalTimeout(120);
+  
+  Serial.println("Verify if there is some saved credentials...");
+  bool initialConfig = false;
+  bool configDataLoaded = false;
+
+  if (loadConfigData())
+  {
+      configDataLoaded = true;
+      ESPAsync_wifiManager.setConfigPortalTimeout(60);
+      Serial.println(F("Got stored Credentials. Timeout 60s for Config Portal"));
+  }
+  else
+  {
+      // Enter CP only if no stored SSID on flash and file 
+      Serial.println(F("Open Config Portal without Timeout: No stored Credentials."));
+      initialConfig = true;
+  }
+
+  Serial.print(F("Starting configuration portal @ "));
+  Serial.print(F("192.168.4.1"));
+
+  digitalWrite(LED_BUILTIN, LED_ON); // turn the LED on by making the voltage LOW to tell us we are in configuration mode.
+
+  // Starts an access point
+  if (!ESPAsync_wifiManager.startConfigPortal((const char *) ssid.c_str()))
+      Serial.println(F("Not connected to WiFi but continuing anyway."));
+  else
+  {
+      Serial.println(F("WiFi connected...yeey :)"));
+  }  
 
   if (WiFi.status() == WL_CONNECTED)
   {

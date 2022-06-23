@@ -1,6 +1,8 @@
 #include "LittleFS.h"
 #include <wifi_mgr.h>
 
+const char* config_file = "/configuration.dat";
+
 typedef struct
 {
   char wifi_ssid[SSID_MAX_LEN];
@@ -20,6 +22,9 @@ typedef struct
   char TZ[TIMEZONE_MAX_LEN];        // "EST5EDT,M3.2.0,M11.1.0"
   uint16_t checksum;
 } WM_Config;
+
+WM_Config         WM_config;
+Thr_Config        Thr_config;
 
 // Initialize LittleFS
 void initFS() {
@@ -43,20 +48,18 @@ int calcChecksum(uint8_t* address, uint16_t sizeToCalc)
   return checkSum;
 }
 
-bool loadConfigData(const char *filename)
+bool loadConfigData()
 {
-  File file = LittleFS.open(filename, "r");
+  File file = LittleFS.open(config_file, "r");
   Serial.println(F("Loading Config File..."));
 
   // Load Wifi Credentials and IP Configuration
   memset((void *) &WM_config,       0, sizeof(WM_config));
-  memset((void *) &WM_STA_IPconfig, 0, sizeof(WM_STA_IPconfig));
   memset((void *) &Thr_config,      0, sizeof(Thr_config));
 
   if (file)
   {
     file.readBytes((char *) &WM_config,   sizeof(WM_config));
-    file.readBytes((char *) &WM_STA_IPconfig, sizeof(WM_STA_IPconfig));
     file.readBytes((char *) &Thr_config, sizeof(Thr_config));
 
     file.close();
@@ -77,9 +80,9 @@ bool loadConfigData(const char *filename)
   }
 }
 
-void saveConfigData(const char *filename)
+void saveConfigData()
 {
-  File file = LittleFS.open(filename, "w");
+  File file = LittleFS.open(config_file, "w");
   Serial.println(F("Saving Config File..."));
 
   if (file)
@@ -87,7 +90,6 @@ void saveConfigData(const char *filename)
     WM_config.checksum = calcChecksum( (uint8_t*) &WM_config, sizeof(WM_config) - sizeof(WM_config.checksum) );
 
     file.write((uint8_t*) &WM_config, sizeof(WM_config));
-    file.write((uint8_t*) &WM_STA_IPconfig, sizeof(WM_STA_IPconfig));
     file.write((uint8_t*) &Thr_config, sizeof(Thr_config));
 
     file.close();
