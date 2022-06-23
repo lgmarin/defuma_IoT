@@ -1,5 +1,6 @@
 #include "LittleFS.h"
 #include <file_utils.h>
+#include <wifi_mgr.h>
 
 #include <ESPAsyncWebServer.h>
 #include <ESPAsync_WiFiManager.h>
