@@ -127,6 +127,40 @@ void setup(){
       ESPAsync_wifiManager.startConfigPortal("defuma_iot");
   }
 
+  // Only clear then save data if CP entered and with new valid Credentials
+  if (String(ESPAsync_wifiManager.getSSID(0)) != "")
+  {
+    storeWifiCred();   // Store data in struct      
+    saveConfigData();
+
+    initialConfig = true;
+  }
+
+  digitalWrite(LED_BUILTIN, LED_OFF); // Turn led off as we are not in configuration mode.
+
+  if (!initialConfig)
+  {
+      // Load stored data, the addAP ready for MultiWiFi reconnection
+      if (!configDataLoaded)
+      loadConfigData();
+
+      for (uint8_t i = 0; i < NUM_WIFI_CREDENTIALS; i++)
+      {
+      // Don't permit NULL SSID and password len < MIN_AP_PASSWORD_SIZE (8)
+      if ( (String(WM_config.WiFi_Creds[i].wifi_ssid) != "") && (strlen(WM_config.WiFi_Creds[i].wifi_pw) >= MIN_AP_PASSWORD_SIZE) )
+      {
+          LOGERROR3(F("* Add SSID = "), WM_config.WiFi_Creds[i].wifi_ssid, F(", PW = "), WM_config.WiFi_Creds[i].wifi_pw );
+          wifiMulti.addAP(WM_config.WiFi_Creds[i].wifi_ssid, WM_config.WiFi_Creds[i].wifi_pw);
+      }
+      }
+
+      if ( WiFi.status() != WL_CONNECTED ) 
+      {
+        Serial.println(F("ConnectMultiWiFi in setup"));
+        connectMultiWiFi();
+      }
+  }  
+
   display.clear();
 
   // Configure Server Async calls
