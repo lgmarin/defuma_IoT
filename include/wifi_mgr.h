@@ -41,7 +41,6 @@
 // if using too much memory
 #define USING_AMERICA       true
 
-
 // Use true to enable CloudFlare NTP service. System can hang if you don't have Internet access while accessing CloudFlare
 // See Issue #21: CloudFlare link in the default portal (https://github.com/khoih-prog/ESP_WiFiManager/issues/21)
 #define USE_CLOUDFLARE_NTP          false
@@ -49,7 +48,7 @@
 // New in v1.0.11
 #define USING_CORS_FEATURE          false
 
-// SSID and PW for Config Portal
+// SSID for Config Portal
 const String ssid = "defuma_iot";
 //const char* password = "your_password";
 

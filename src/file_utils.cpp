@@ -1,5 +1,8 @@
 #include "LittleFS.h"
 #include <wifi_mgr.h>
+#include <ESP8266WiFiMulti.h>
+
+ESP8266WiFiMulti wifiMulti;
 
 const char* config_file = "/configuration.dat";
 
@@ -142,4 +145,69 @@ bool loadWifiCred()
         wifiMulti.addAP(WM_config.WiFi_Creds[i].wifi_ssid, WM_config.WiFi_Creds[i].wifi_pw);
     }
   }
+}
+
+void check_WiFi()
+{
+    if ( (WiFi.status() != WL_CONNECTED) )
+    {
+        Serial.println(F("\nWiFi lost. Call connectMultiWiFi in loop"));
+        //connectMultiWiFi();
+    }
+}  
+
+void check_status()
+{
+    static float checkwifi_timeout = 0;
+
+    static float current_millis;
+
+    #define WIFICHECK_INTERVAL    1000L
+
+    current_millis = millis();
+
+    // Check WiFi every WIFICHECK_INTERVAL (1) seconds.
+    if ((current_millis > checkwifi_timeout) || (checkwifi_timeout == 0))
+    {
+        check_WiFi();
+        checkwifi_timeout = current_millis + WIFICHECK_INTERVAL;
+    }
+}
+
+uint8_t connectMultiWiFi()
+{
+    #define WIFI_MULTI_1ST_CONNECT_WAITING_MS             2200L
+    #define WIFI_MULTI_CONNECT_WAITING_MS                   500L
+
+    uint8_t status;
+
+    Serial.println(F("Connecting MultiWifi..."));
+
+    int i = 0;
+    status = wifiMulti.run();
+    delay(WIFI_MULTI_1ST_CONNECT_WAITING_MS);
+
+    while ( ( i++ < 20 ) && ( status != WL_CONNECTED ) )
+    {
+        status = WiFi.status();
+
+        if ( status == WL_CONNECTED )
+        break;
+        else
+        delay(WIFI_MULTI_CONNECT_WAITING_MS);
+    }
+
+    if ( status == WL_CONNECTED )
+    {
+        Serial.println(F("WiFi connected!"));
+        Serial.println("SSID:" ); Serial.print(WiFi.SSID()); 
+        Serial.println(", RSSI="); Serial.print(WiFi.RSSI());
+        Serial.println(",IP address:"), Serial.print(WiFi.localIP());
+    }
+    else
+    {
+        Serial.println(F("WiFi not connected, reseting ESP!")); 
+        ESP.reset();
+    }
+    return status;
 }
