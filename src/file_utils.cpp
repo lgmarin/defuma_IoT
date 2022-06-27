@@ -170,7 +170,7 @@ void checkWifiStatus()
 uint8_t connectMultiWifi()
 {
   #define WIFI_MULTI_1ST_CONNECT_WAITING_MS             2200L
-  #define WIFI_MULTI_CONNECT_WAITING_MS                   500L
+  #define WIFI_MULTI_CONNECT_WAITING_MS                  500L
 
   uint8_t status;
 
