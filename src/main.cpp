@@ -81,6 +81,8 @@ void setup(){
   // Set Buzzer PIN as Output
   pinMode(BUZZ, OUTPUT);
 
+ // AsynWifiManager Block BEGIN
+
   ESPAsync_WiFiManager ESPAsync_wifiManager(&server, &dnsServer, "defuma_iot");
   //ESPAsync_wifiManager.resetSettings();   //reset saved settings
   
@@ -101,7 +103,7 @@ void setup(){
       initialConfig = true;
   }
 
-  Serial.print(F("Starting configuration portal @ "));
+  Serial.println(F("Starting configuration portal @ "));
   Serial.print(F("192.168.4.1"));
 
   digitalWrite(LED_BUILTIN, LED_ON); // turn the LED on by making the voltage LOW to tell us we are in configuration mode.
@@ -116,23 +118,20 @@ void setup(){
 
   if (WiFi.status() == WL_CONNECTED)
   {
-      Serial.print(F("Connected. Local IP: "));
-      Serial.println(WiFi.localIP());
+      Serial.println(F("Connected. Local IP: "));
+      Serial.print(WiFi.localIP());
   }
   else
   {
       Serial.println(ESPAsync_wifiManager.getStatus(WiFi.status()));
       Serial.println("Can't connect! Entering WiFi config mode...");
-      Serial.println("Restart board...");
-      ESPAsync_wifiManager.startConfigPortal("defuma_iot");
+      ESPAsync_wifiManager.startConfigPortal((const char *) ssid.c_str());
   }
 
   // Only clear then save data if CP entered and with new valid Credentials
   if (String(ESPAsync_wifiManager.getSSID(0)) != "")
   {
     storeWifiCred();   // Store data in struct      
-    //saveConfigData();
-
     initialConfig = true;
   }
 
@@ -140,32 +139,21 @@ void setup(){
 
   if (!initialConfig)
   {
-      // Load stored data, the addAP ready for MultiWiFi reconnection
-      if (!configDataLoaded)
-
-
-      for (uint8_t i = 0; i < NUM_WIFI_CREDENTIALS; i++)
-      {
-        // Don't permit NULL SSID and password len < MIN_AP_PASSWORD_SIZE (8)
-        if ( (String(WM_config.WiFi_Creds[i].wifi_ssid) != "") && (strlen(WM_config.WiFi_Creds[i].wifi_pw) >= MIN_AP_PASSWORD_SIZE) )
-        {
-            LOGERROR3(F("* Add SSID = "), WM_config.WiFi_Creds[i].wifi_ssid, F(", PW = "), WM_config.WiFi_Creds[i].wifi_pw );
-            wifiMulti.addAP(WM_config.WiFi_Creds[i].wifi_ssid, WM_config.WiFi_Creds[i].wifi_pw);
-        }
-      }
-
-      if ( WiFi.status() != WL_CONNECTED ) 
-      {
-        Serial.println(F("ConnectMultiWiFi in setup"));
-        connectMultiWiFi();
-      }
+    // Load stored data, the addAP ready for MultiWiFi reconnection
+    if (!configDataLoaded)
+      loadWifiCred();
+    if ( WiFi.status() != WL_CONNECTED ) 
+    {
+      Serial.println(F("ConnectMultiWiFi in setup"));
+      connectMultiWifi();
+    }
   }  
+  // AsynWifiManager Block END
 
   display.clear();
 
   // Configure Server Async calls
   server.serveStatic("/", LittleFS, "/");
-
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(LittleFS, "/index.html", "text/html", false, processor);
@@ -208,9 +196,9 @@ void loop(){
     } 
     else
     {
-      Serial.print("Temperature: ");
-      Serial.print(temperature);
-      Serial.println(" °C");
+      // Serial.print("Temperature: ");
+      // Serial.print(temperature);
+      // Serial.println(" °C");
       display.showNumberDec(temperature);
     }
 

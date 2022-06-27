@@ -48,6 +48,8 @@
 // New in v1.0.11
 #define USING_CORS_FEATURE          false
 
+#define WIFICHECK_INTERVAL          1000L
+
 // SSID for Config Portal
 const String ssid = "defuma_iot";
 //const char* password = "your_password";
