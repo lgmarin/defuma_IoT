@@ -1,7 +1,7 @@
 #ifndef wifi_mgr
 #define wifi_mgr
 
-#include <Arduino.h>
+#include <stdint.h>
 
 #define LED_ON      LOW
 #define LED_OFF     HIGH
@@ -52,16 +52,10 @@
 
 #define WIFICHECK_INTERVAL          1000L
 
-// SSID for Config Portal
-extern const String ssid = "defuma_iot";
-//const char* password = "your_password";
-
 // SSID and PW for your Router
-extern String Router_SSID;
-extern String Router_Pass;
+// extern String Router_SSID;
+// extern String Router_Pass;
 //////
-
-extern const char* config_file = "/configuration.dat";
 
 typedef struct
 {

@@ -4,6 +4,8 @@
 
 ESP8266WiFiMulti wifiMulti;
 
+const char* config_file = "/configuration.dat";
+
 // Initialize LittleFS
 void initFS() {
   if (!LittleFS.begin()) {
