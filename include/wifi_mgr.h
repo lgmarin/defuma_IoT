@@ -58,6 +58,4 @@ String Router_SSID;
 String Router_Pass;
 //////
 
-void 
-
 #endif

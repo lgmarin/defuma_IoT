@@ -4,5 +4,6 @@
 void initFS();
 bool loadConfigData();
 void saveConfigData();
+void storeWifiCred();
 
 #endif

@@ -87,34 +87,9 @@ void StartWifiManager(){
 
     // Only clear then save data if CP entered and with new valid Credentials
     // No CP => stored getSSID() = ""
-    if ( String(ESPAsync_wifiManager.getSSID(0)) != "" && String(ESPAsync_wifiManager.getSSID(1)) != "" )
+    if (String(ESPAsync_wifiManager.getSSID(0)) != "")
     {
-        // Stored  for later usage, from v1.1.0, but clear first
-        memset(&WM_config, 0, sizeof(WM_config));
-        
-        for (uint8_t i = 0; i < NUM_WIFI_CREDENTIALS; i++)
-        {
-            String tempSSID = ESPAsync_wifiManager.getSSID(i);
-            String tempPW   = ESPAsync_wifiManager.getPW(i);
-
-            if (strlen(tempSSID.c_str()) < sizeof(WM_config.WiFi_Creds[i].wifi_ssid) - 1)
-                strcpy(WM_config.WiFi_Creds[i].wifi_ssid, tempSSID.c_str());
-            else
-                strncpy(WM_config.WiFi_Creds[i].wifi_ssid, tempSSID.c_str(), sizeof(WM_config.WiFi_Creds[i].wifi_ssid) - 1);
-
-            if (strlen(tempPW.c_str()) < sizeof(WM_config.WiFi_Creds[i].wifi_pw) - 1)
-                strcpy(WM_config.WiFi_Creds[i].wifi_pw, tempPW.c_str());
-            else
-                strncpy(WM_config.WiFi_Creds[i].wifi_pw, tempPW.c_str(), sizeof(WM_config.WiFi_Creds[i].wifi_pw) - 1);  
-
-            // Don't permit NULL SSID and password len < MIN_AP_PASSWORD_SIZE (8)
-            if ( (String(WM_config.WiFi_Creds[i].wifi_ssid) != "") && (strlen(WM_config.WiFi_Creds[i].wifi_pw) >= MIN_AP_PASSWORD_SIZE) )
-            {
-                LOGERROR3(F("* Add SSID = "), WM_config.WiFi_Creds[i].wifi_ssid, F(", PW = "), WM_config.WiFi_Creds[i].wifi_pw );
-                //wifiMulti.addAP(WM_config.WiFi_Creds[i].wifi_ssid, WM_config.WiFi_Creds[i].wifi_pw);
-            }
-        }
-        
+        storeWifiCred();   // Store data in struct      
         saveConfigData();
 
         initialConfig = true;

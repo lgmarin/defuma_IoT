@@ -100,3 +100,31 @@ void saveConfigData()
       Serial.println(F("Saving Config File Failed!"));
   }
 }
+
+void storeWifiCred(String SSID, String password)
+{
+  // Stored  for later usage, from v1.1.0, but clear first
+  memset(&WM_config, 0, sizeof(WM_config));
+  
+  for (uint8_t i = 0; i < NUM_WIFI_CREDENTIALS; i++)
+  {
+      String tempSSID = SSID;
+      String tempPW   = password;
+
+      if (strlen(tempSSID.c_str()) < sizeof(WM_config.WiFi_Creds[i].wifi_ssid) - 1)
+          strcpy(WM_config.WiFi_Creds[i].wifi_ssid, tempSSID.c_str());
+      else
+          strncpy(WM_config.WiFi_Creds[i].wifi_ssid, tempSSID.c_str(), sizeof(WM_config.WiFi_Creds[i].wifi_ssid) - 1);
+
+      if (strlen(tempPW.c_str()) < sizeof(WM_config.WiFi_Creds[i].wifi_pw) - 1)
+          strcpy(WM_config.WiFi_Creds[i].wifi_pw, tempPW.c_str());
+      else
+          strncpy(WM_config.WiFi_Creds[i].wifi_pw, tempPW.c_str(), sizeof(WM_config.WiFi_Creds[i].wifi_pw) - 1);  
+
+      // Don't permit NULL SSID and password len < MIN_AP_PASSWORD_SIZE (8)
+      if ( (String(WM_config.WiFi_Creds[i].wifi_ssid) != "") && (strlen(WM_config.WiFi_Creds[i].wifi_pw) >= MIN_AP_PASSWORD_SIZE) )
+      {
+          Serial.println(F("Invalid SSID or Password!"));
+      }
+  }
+}
