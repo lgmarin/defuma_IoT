@@ -4,28 +4,6 @@
 
 ESP8266WiFiMulti wifiMulti;
 
-const char* config_file = "/configuration.dat";
-
-typedef struct
-{
-  char wifi_ssid[SSID_MAX_LEN];
-  char wifi_pw  [PASS_MAX_LEN];
-} WiFi_Credentials;
-
-typedef struct
-{
-  char temp_max[3];
-  char temp_min[3];
-} Thr_Config;
-
-typedef struct
-{
-  WiFi_Credentials  WiFi_Creds [NUM_WIFI_CREDENTIALS];
-  char TZ_Name[TZNAME_MAX_LEN];     // "America/Toronto"
-  char TZ[TIMEZONE_MAX_LEN];        // "EST5EDT,M3.2.0,M11.1.0"
-  uint16_t checksum;
-} WM_Config;
-
 WM_Config         WM_config;
 Thr_Config        Thr_config;
 
@@ -202,5 +180,6 @@ uint8_t connectMultiWifi()
     Serial.println(F("WiFi not connected, reseting ESP!")); 
     ESP.reset();
   }
+  
   return status;
 }

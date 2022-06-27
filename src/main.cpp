@@ -1,3 +1,6 @@
+#include <Arduino.h>
+#include <stdint.h>
+
 #include <LittleFS.h>
 #include <ESPAsyncWebServer.h>
 #include <ESPAsync_WiFiManager.h>
