@@ -131,7 +131,7 @@ void setup(){
   if (String(ESPAsync_wifiManager.getSSID(0)) != "")
   {
     storeWifiCred();   // Store data in struct      
-    saveConfigData();
+    //saveConfigData();
 
     initialConfig = true;
   }
@@ -142,16 +142,16 @@ void setup(){
   {
       // Load stored data, the addAP ready for MultiWiFi reconnection
       if (!configDataLoaded)
-      loadConfigData();
+
 
       for (uint8_t i = 0; i < NUM_WIFI_CREDENTIALS; i++)
       {
-      // Don't permit NULL SSID and password len < MIN_AP_PASSWORD_SIZE (8)
-      if ( (String(WM_config.WiFi_Creds[i].wifi_ssid) != "") && (strlen(WM_config.WiFi_Creds[i].wifi_pw) >= MIN_AP_PASSWORD_SIZE) )
-      {
-          LOGERROR3(F("* Add SSID = "), WM_config.WiFi_Creds[i].wifi_ssid, F(", PW = "), WM_config.WiFi_Creds[i].wifi_pw );
-          wifiMulti.addAP(WM_config.WiFi_Creds[i].wifi_ssid, WM_config.WiFi_Creds[i].wifi_pw);
-      }
+        // Don't permit NULL SSID and password len < MIN_AP_PASSWORD_SIZE (8)
+        if ( (String(WM_config.WiFi_Creds[i].wifi_ssid) != "") && (strlen(WM_config.WiFi_Creds[i].wifi_pw) >= MIN_AP_PASSWORD_SIZE) )
+        {
+            LOGERROR3(F("* Add SSID = "), WM_config.WiFi_Creds[i].wifi_ssid, F(", PW = "), WM_config.WiFi_Creds[i].wifi_pw );
+            wifiMulti.addAP(WM_config.WiFi_Creds[i].wifi_ssid, WM_config.WiFi_Creds[i].wifi_pw);
+        }
       }
 
       if ( WiFi.status() != WL_CONNECTED ) 

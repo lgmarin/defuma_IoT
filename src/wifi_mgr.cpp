@@ -1,7 +1,9 @@
 #include <wifi_mgr.h>
 #include <file_utils.h>
 #include <Arduino.h>
+#include <ESP8266WiFiMulti.h>
 
+ESP8266WiFiMulti wifiMulti;
 
 void StartWifiManager(){
 
@@ -134,4 +136,4 @@ void StartWifiManager(){
     }
     else
         Serial.println(ESPAsync_wifiManager.getStatus(WiFi.status()));
-}    
+}

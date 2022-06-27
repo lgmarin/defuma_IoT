@@ -127,4 +127,19 @@ void storeWifiCred(String SSID, String password)
           Serial.println(F("Invalid SSID or Password!"));
       }
   }
+  saveConfigData();
+}
+
+bool loadWifiCred()
+{
+  loadConfigData();
+
+  for (uint8_t i = 0; i < NUM_WIFI_CREDENTIALS; i++)
+  {
+    // Don't permit NULL SSID and password len < MIN_AP_PASSWORD_SIZE (8)
+    if ( (String(WM_config.WiFi_Creds[i].wifi_ssid) != "") && (strlen(WM_config.WiFi_Creds[i].wifi_pw) >= MIN_AP_PASSWORD_SIZE) )
+    {
+        wifiMulti.addAP(WM_config.WiFi_Creds[i].wifi_ssid, WM_config.WiFi_Creds[i].wifi_pw);
+    }
+  }
 }
