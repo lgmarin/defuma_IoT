@@ -1,11 +1,8 @@
-#include "LittleFS.h"
-#include <wifi_mgr.h>
+#include "wifi_mgr.h"
+#include <LittleFS.h>
 #include <ESP8266WiFiMulti.h>
 
 ESP8266WiFiMulti wifiMulti;
-
-WM_Config         WM_config;
-Thr_Config        Thr_config;
 
 // Initialize LittleFS
 void initFS() {
@@ -113,39 +110,25 @@ void storeWifiCred(String SSID, String password)
 
 bool loadWifiCred()
 {
-  loadConfigData();
-
-  for (uint8_t i = 0; i < NUM_WIFI_CREDENTIALS; i++)
+  if(loadConfigData())
   {
-    // Don't permit NULL SSID and password len < MIN_AP_PASSWORD_SIZE (8)
-    if ( (String(WM_config.WiFi_Creds[i].wifi_ssid) != "") && (strlen(WM_config.WiFi_Creds[i].wifi_pw) >= MIN_AP_PASSWORD_SIZE) )
+    for (uint8_t i = 0; i < NUM_WIFI_CREDENTIALS; i++)
     {
-        wifiMulti.addAP(WM_config.WiFi_Creds[i].wifi_ssid, WM_config.WiFi_Creds[i].wifi_pw);
-        return true;
+      // Don't permit NULL SSID and password len < MIN_AP_PASSWORD_SIZE (8)
+      if ( (String(WM_config.WiFi_Creds[i].wifi_ssid) != "") && (strlen(WM_config.WiFi_Creds[i].wifi_pw) >= MIN_AP_PASSWORD_SIZE) )
+      {
+          wifiMulti.addAP(WM_config.WiFi_Creds[i].wifi_ssid, WM_config.WiFi_Creds[i].wifi_pw);
+      }
     }
+    return true;
   }
-}
-
-void checkWifiStatus()
-{
-  static float checkwifi_timeout = 0;
-  static float current_millis;
-
-  current_millis = millis();
-
-  if ( (WiFi.status() != WL_CONNECTED) )
+  else
   {
-    // Check WiFi every WIFICHECK_INTERVAL (1) seconds.
-    if ((current_millis > checkwifi_timeout) || (checkwifi_timeout == 0))
-    {
-      checkwifi_timeout = current_millis + WIFICHECK_INTERVAL;      
-      Serial.println(F("\nWiFi lost. Call connectMultiWiFi in loop"));
-      connectMultiWifi();
-    } 
+    return false;
   }
 }
 
-uint8_t connectMultiWifi()
+void connectMultiWifi()
 {
   #define WIFI_MULTI_1ST_CONNECT_WAITING_MS             2200L
   #define WIFI_MULTI_CONNECT_WAITING_MS                  500L
@@ -180,6 +163,23 @@ uint8_t connectMultiWifi()
     Serial.println(F("WiFi not connected, reseting ESP!")); 
     ESP.reset();
   }
-  
-  return status;
+}
+
+void checkWifiStatus()
+{
+  static float checkwifi_timeout = 0;
+  static float current_millis;
+
+  current_millis = millis();
+
+  if ( (WiFi.status() != WL_CONNECTED) )
+  {
+    // Check WiFi every WIFICHECK_INTERVAL (1) seconds.
+    if ((current_millis > checkwifi_timeout) || (checkwifi_timeout == 0))
+    {
+      checkwifi_timeout = current_millis + WIFICHECK_INTERVAL;      
+      Serial.println(F("\nWiFi lost. Call connectMultiWiFi in loop"));
+      connectMultiWifi();
+    } 
+  }
 }

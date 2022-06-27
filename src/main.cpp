@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include <stdint.h>
 
 #include <LittleFS.h>
 #include <ESPAsyncWebServer.h>
@@ -7,9 +6,9 @@
 #include <SPI.h>
 #include <TM1637Display.h>
 
-#include <read_temp.h>
-#include <file_utils.h>
-#include <wifi_mgr.h>
+#include "wifi_mgr.h"
+#include "read_temp.h"
+#include "file_utils.h"
 
 // USING GPIO PINS FOR ESP12 Compatibility!
 // D# Pins correspond to nodeMCU V1.2 pins
@@ -109,10 +108,10 @@ void setup(){
   Serial.println(F("Starting configuration portal @ "));
   Serial.print(F("192.168.4.1"));
 
-  digitalWrite(LED_BUILTIN, LED_ON); // turn the LED on by making the voltage LOW to tell us we are in configuration mode.
+  //digitalWrite(LED_BUILTIN, LED_ON); // turn the LED on by making the voltage LOW to tell us we are in configuration mode.
 
   // Starts an access point
-  if (!ESPAsync_wifiManager.startConfigPortal((const char *) ssid.c_str()))
+  if (!ESPAsync_wifiManager.startConfigPortal("defuma_IOT")) //(const char *) ssid.c_str())
       Serial.println(F("Not connected to WiFi but continuing anyway."));
   else
   {
@@ -128,7 +127,7 @@ void setup(){
   {
       Serial.println(ESPAsync_wifiManager.getStatus(WiFi.status()));
       Serial.println("Can't connect! Entering WiFi config mode...");
-      ESPAsync_wifiManager.startConfigPortal((const char *) ssid.c_str());
+      ESPAsync_wifiManager.startConfigPortal("defuma_IOT"); //(const char *) ssid.c_str())
   }
 
   // Only clear then save data if CP entered and with new valid Credentials
@@ -138,7 +137,7 @@ void setup(){
     initialConfig = true;
   }
 
-  digitalWrite(LED_BUILTIN, LED_OFF); // Turn led off as we are not in configuration mode.
+  //digitalWrite(LED_BUILTIN, LED_OFF); // Turn led off as we are not in configuration mode.
 
   if (!initialConfig)
   {
