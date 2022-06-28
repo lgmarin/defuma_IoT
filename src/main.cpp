@@ -131,7 +131,7 @@ void setup(){
   // Only clear then save data if CP entered and with new valid Credentials
   if (String(ESPAsync_wifiManager.getSSID(0)) != "")
   {
-    storeWifiCred();   // Store data in struct      
+    //storeWifiCred();   // Store data in struct      
     initialConfig = true;
   }
 
