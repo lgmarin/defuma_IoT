@@ -1,7 +1,7 @@
 #ifndef wifi_mgr
 #define wifi_mgr
 
-#include <stdint.h>
+#include <Arduino.h>
 
 #define LED_ON      LOW
 #define LED_OFF     HIGH

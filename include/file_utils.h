@@ -4,7 +4,7 @@
 void initFS();
 bool loadConfigData();
 void saveConfigData();
-void storeWifiCred();
+void storeWifiCred(String SSID, String password);
 bool loadWifiCred();
 void connectMultiWifi();
 
