@@ -90,10 +90,10 @@ void setup(){
   bool initialConfig = false;
   bool configDataLoaded = false;
 
-  if (loadConfigData())
+  if (loadWifiCred())
   {
       configDataLoaded = true;
-      ESPAsync_wifiManager.setConfigPortalTimeout(120);
+      ESPAsync_wifiManager.setConfigPortalTimeout(20);
       Serial.println(F("Got stored Credentials. Timeout 60s for Config Portal"));
   }
   else
@@ -120,8 +120,7 @@ void setup(){
   {
       Serial.println(F("Connected. Local IP: "));
       Serial.print(WiFi.localIP());
-  }
-  else
+  } else
   {
       Serial.println(ESPAsync_wifiManager.getStatus(WiFi.status()));
       Serial.println("Can't connect! Entering WiFi config mode...");
@@ -131,10 +130,10 @@ void setup(){
   // Only clear then save data if CP entered and with new valid Credentials
   if (String(ESPAsync_wifiManager.getSSID(0)) != "" && String(ESPAsync_wifiManager.getPW(0)) != "")
   {
-    Serial.println("Connected at: ");
+    Serial.print("Connected at: ");
     String SSID = ESPAsync_wifiManager.getSSID(0);
     String PW = ESPAsync_wifiManager.getPW(0);
-    Serial.print(SSID);
+    Serial.println(SSID);
     storeWifiCred(SSID, PW);   // Store data in struct      
     initialConfig = true;
   }
