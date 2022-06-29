@@ -2,7 +2,11 @@
 #define file_utils_h
 
 void initFS();
-String readFile(fs::FS &fs, const char * path);
-void writeFile(fs::FS &fs, const char * path, const char * message);
+bool loadConfigData();
+void saveConfigData();
+void storeWifiCred(String SSID, String password);
+bool loadWifiCred();
+void connectMultiWifi();
+void checkWifiStatus();
 
 #endif

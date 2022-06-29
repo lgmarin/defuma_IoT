@@ -1,11 +1,12 @@
-#include <SPI.h>
-#include <TM1637Display.h>
+#include <LittleFS.h>
 #include <ESPAsyncWebServer.h>
 #include <ESPAsync_WiFiManager.h>
-#include "LittleFS.h"
+#include <SPI.h>
+#include <TM1637Display.h>
 
-#include <read_temp.h>
-#include <file_utils.h>
+//#include "wifi_mgr.h"
+#include "read_temp.h"
+#include "file_utils.h"
 
 // USING GPIO PINS FOR ESP12 Compatibility!
 // D# Pins correspond to nodeMCU V1.2 pins
@@ -60,10 +61,9 @@ const long interval = 1000;
 
 void setup(){
   Serial.begin(9600);
-  while (!Serial);
   delay(200);
 
-  //Intiate SPI transaction
+ //Intiate SPI transaction
   SPI.begin();
 
   // Init LittleFS
@@ -81,32 +81,83 @@ void setup(){
   // Set Buzzer PIN as Output
   pinMode(BUZZ, OUTPUT);
 
-  ESPAsync_WiFiManager ESPAsync_wifiManager(&server, &dnsServer, "defuma_iot");
-  //ESPAsync_wifiManager.resetSettings();   //reset saved settings
-  Serial.println("Trying to connect to previously saved AP...");
-  ESPAsync_wifiManager.autoConnect("defuma_iot");
+ // AsynWifiManager Block BEGIN
 
-  if (WiFi.status() == WL_CONNECTED)
+  ESPAsync_WiFiManager ESPAsync_wifiManager(&server, &dnsServer, "defuma_iot");
+  
+  Serial.println("Verify if there is some saved credentials...");
+  bool initialConfig = false;
+  bool configDataLoaded = false;
+
+  if (loadWifiCred())
   {
-      Serial.print(F("Connected. Local IP: "));
-      Serial.println(WiFi.localIP());
+      configDataLoaded = true;
+      ESPAsync_wifiManager.setConfigPortalTimeout(30);
+      Serial.println(F("Got stored Credentials. Timeout 30s for Config Portal"));
   }
   else
   {
+      // Enter CP only if no stored SSID on flash and file 
+      Serial.println(F("Open Config Portal without Timeout: No stored Credentials."));
+      initialConfig = true;
+  }
+
+  Serial.println(F("Starting configuration portal @ "));
+  Serial.print(F("192.168.4.1"));
+
+  digitalWrite(LED_BUILTIN, LOW); // turn the LED on by making the voltage LOW to tell us we are in configuration mode.
+
+  // Starts an access point
+  if (!ESPAsync_wifiManager.startConfigPortal("defuma_IOT")) //(const char *) ssid.c_str())
+      Serial.println(F("Not connected to WiFi but continuing anyway."));
+  else
+  {
+      Serial.println(F("WiFi connected...yeey :)"));
+  }  
+
+  if (WiFi.status() == WL_CONNECTED)
+  {
+      Serial.println(F("Connected. Local IP: "));
+      Serial.print(WiFi.localIP());
+  } else
+  {
       Serial.println(ESPAsync_wifiManager.getStatus(WiFi.status()));
       Serial.println("Can't connect! Entering WiFi config mode...");
-      Serial.println("Restart board...");
-      ESP.reset();
+      ESPAsync_wifiManager.startConfigPortal("defuma_IOT"); //(const char *) ssid.c_str())
   }
+
+  // Only clear then save data if CP entered and with new valid Credentials
+  if (String(ESPAsync_wifiManager.getSSID(0)) != "" && String(ESPAsync_wifiManager.getPW(0)) != "")
+  {
+    Serial.print("Connected at: ");
+    String SSID = ESPAsync_wifiManager.getSSID(0);
+    String PW = ESPAsync_wifiManager.getPW(0);
+    Serial.println(SSID);
+    storeWifiCred(SSID, PW);   // Store data in struct      
+    initialConfig = true;
+  }
+
+  digitalWrite(LED_BUILTIN, HIGH); // Turn led off as we are not in configuration mode.
+
+  if (!initialConfig)
+  {
+    // Load stored data, the addAP ready for MultiWiFi reconnection
+    if (!configDataLoaded)
+      loadWifiCred();
+    if ( WiFi.status() != WL_CONNECTED ) 
+    {
+      Serial.println(F("ConnectMultiWiFi in setup"));
+      connectMultiWifi();
+    }
+  }  
+  // AsynWifiManager Block END
 
   display.clear();
 
   // Configure Server Async calls
   server.serveStatic("/", LittleFS, "/");
 
-
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    //request->send_P(200, "text/html", index_html, processor);
     request->send(LittleFS, "/index.html", "text/html", false, processor);
   });
 
@@ -129,7 +180,7 @@ void setup(){
   });
 
   server.onNotFound(notFound);
-  server.begin();    
+  server.begin();
 }
 
 void loop(){
@@ -147,9 +198,6 @@ void loop(){
     } 
     else
     {
-      Serial.print("Temperature: ");
-      Serial.print(temperature);
-      Serial.println(" °C");
       display.showNumberDec(temperature);
     }
 
