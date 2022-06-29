@@ -110,10 +110,6 @@ void storeWifiCred(String SSID, String password)
       {
           Serial.println(F("Invalid SSID or Password!"));
       }
-      Serial.print("Saved SSID: ");
-      Serial.println(WM_config.WiFi_Creds[i].wifi_ssid);
-      Serial.print("Saved PW: ");
-      Serial.println(WM_config.WiFi_Creds[i].wifi_pw);
   }
   saveConfigData();
 }
@@ -127,10 +123,8 @@ bool loadWifiCred()
       // Don't permit NULL SSID and password len < MIN_AP_PASSWORD_SIZE (8)
       if ( (String(WM_config.WiFi_Creds[i].wifi_ssid) != "") && (strlen(WM_config.WiFi_Creds[i].wifi_pw) >= MIN_AP_PASSWORD_SIZE) )
       {
-          Serial.print("Loaded SSID: ");
+          Serial.print("Add SSID: ");
           Serial.println(WM_config.WiFi_Creds[i].wifi_ssid);
-          Serial.print("Loaded PW: ");
-          Serial.println(WM_config.WiFi_Creds[i].wifi_pw);
           wifiMulti.addAP(WM_config.WiFi_Creds[i].wifi_ssid, WM_config.WiFi_Creds[i].wifi_pw);
       }
     }
@@ -167,10 +161,10 @@ void connectMultiWifi()
 
   if ( status == WL_CONNECTED )
   {
-    Serial.println(F("WiFi connected!"));
-    Serial.println("SSID: "); Serial.print(WiFi.SSID()); 
-    Serial.println("RSSI= "); Serial.print(WiFi.RSSI());
-    Serial.println("IP address: "), Serial.print(WiFi.localIP());
+    Serial.println(F("\nWiFi connected!"));
+    Serial.println("\nSSID: "); Serial.print(WiFi.SSID()); 
+    Serial.println("\nRSSI= "); Serial.print(WiFi.RSSI());
+    Serial.println("\nIP address: "), Serial.print(WiFi.localIP());
   }
   else
   {

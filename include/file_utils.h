@@ -7,5 +7,6 @@ void saveConfigData();
 void storeWifiCred(String SSID, String password);
 bool loadWifiCred();
 void connectMultiWifi();
+void checkWifiStatus();
 
 #endif

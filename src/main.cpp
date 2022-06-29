@@ -84,7 +84,6 @@ void setup(){
  // AsynWifiManager Block BEGIN
 
   ESPAsync_WiFiManager ESPAsync_wifiManager(&server, &dnsServer, "defuma_iot");
-  //ESPAsync_wifiManager.resetSettings();   //reset saved settings
   
   Serial.println("Verify if there is some saved credentials...");
   bool initialConfig = false;
@@ -106,7 +105,7 @@ void setup(){
   Serial.println(F("Starting configuration portal @ "));
   Serial.print(F("192.168.4.1"));
 
-  //digitalWrite(LED_BUILTIN, LED_ON); // turn the LED on by making the voltage LOW to tell us we are in configuration mode.
+  digitalWrite(LED_BUILTIN, LOW); // turn the LED on by making the voltage LOW to tell us we are in configuration mode.
 
   // Starts an access point
   if (!ESPAsync_wifiManager.startConfigPortal("defuma_IOT")) //(const char *) ssid.c_str())
@@ -138,7 +137,7 @@ void setup(){
     initialConfig = true;
   }
 
-  //digitalWrite(LED_BUILTIN, LED_OFF); // Turn led off as we are not in configuration mode.
+  digitalWrite(LED_BUILTIN, HIGH); // Turn led off as we are not in configuration mode.
 
   if (!initialConfig)
   {
@@ -199,9 +198,6 @@ void loop(){
     } 
     else
     {
-      // Serial.print("Temperature: ");
-      // Serial.print(temperature);
-      // Serial.println(" °C");
       display.showNumberDec(temperature);
     }
 
