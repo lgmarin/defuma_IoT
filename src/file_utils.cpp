@@ -4,7 +4,8 @@
 
 ESP8266WiFiMulti wifiMulti;
 
-const char* config_file = "/configuration.dat";
+const char* wifi_config_file = "/wifi_cfg.dat";
+const char* config_file = "/config.dat";
 
 WM_Config         WM_config;
 Thr_Config        Thr_config;
@@ -33,7 +34,7 @@ int calcChecksum(uint8_t* address, uint16_t sizeToCalc)
 
 bool loadConfigData()
 {
-  File file = LittleFS.open(config_file, "r");
+  File file = LittleFS.open(wifi_config_file, "r");
   Serial.println(F("Loading Config File..."));
 
   // Load Wifi Credentials and IP Configuration
@@ -65,7 +66,7 @@ bool loadConfigData()
 
 void saveConfigData()
 {
-  File file = LittleFS.open(config_file, "w");
+  File file = LittleFS.open(wifi_config_file, "w");
   Serial.println(F("Saving Config File..."));
 
   if (file)

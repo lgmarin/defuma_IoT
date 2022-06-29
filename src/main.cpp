@@ -93,8 +93,8 @@ void setup(){
   if (loadWifiCred())
   {
       configDataLoaded = true;
-      ESPAsync_wifiManager.setConfigPortalTimeout(20);
-      Serial.println(F("Got stored Credentials. Timeout 60s for Config Portal"));
+      ESPAsync_wifiManager.setConfigPortalTimeout(30);
+      Serial.println(F("Got stored Credentials. Timeout 30s for Config Portal"));
   }
   else
   {
@@ -181,7 +181,7 @@ void setup(){
   });
 
   server.onNotFound(notFound);
-  server.begin();    
+  server.begin();
 }
 
 void loop(){
