@@ -28,15 +28,12 @@ int calcChecksum(uint8_t* address, uint16_t sizeToCalc)
   {
     checkSum += * ( ( (byte*) address ) + index);
   }
-
   return checkSum;
 }
 
 bool loadConfigData(void *str_Config, size_t size, char* filename)
 {
   File file = LittleFS.open(filename, "r");
-  Serial.println(F("Loading Config File..."));
-
   memset(str_Config, 0, size);
 
   if (file)
@@ -48,7 +45,7 @@ bool loadConfigData(void *str_Config, size_t size, char* filename)
   }
   else
   {
-    Serial.println(F("Loading Config File Failed!"));
+    Serial.println(F("ERROR: Loading Config File Failed!"));
     return false;
   }
 }
@@ -56,7 +53,6 @@ bool loadConfigData(void *str_Config, size_t size, char* filename)
 bool saveConfigData(void *str_Config, size_t size, char* filename)
 {
   File file = LittleFS.open(filename, "w");
-  Serial.println(F("Saving Config File..."));
 
   if (file)
   {
@@ -68,9 +64,25 @@ bool saveConfigData(void *str_Config, size_t size, char* filename)
   }
   else
   {
-      Serial.println(F("Saving Config File Failed!"));
-      return false;
+    Serial.println(F("ERROR: Saving Config File Failed!"));
+    return false;
   }
+}
+
+bool removeConfigData(char* filename)
+{
+  if (LittleFS.exists(filename))
+  {
+    if (LittleFS.remove(filename))
+    {
+      Serial.println(F("File removed!"));
+      return true;
+    }
+    Serial.println(F("ERROR: File couldn't be removed!"));
+    return false;
+  }
+  Serial.println(F("ERROR: File couldn't be removed!"));
+  return false;
 }
 
 void storeWifiCred(String SSID, String password)
