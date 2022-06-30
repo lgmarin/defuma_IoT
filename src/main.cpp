@@ -1,6 +1,7 @@
 #include <LittleFS.h>
 #include <ESPAsyncWebServer.h>
 #include <ESPAsync_WiFiManager.h>
+#include <ESP8266mDNS.h>
 #include <SPI.h>
 #include <TM1637Display.h>
 
@@ -181,6 +182,12 @@ void setup(){
 
   server.onNotFound(notFound);
   server.begin();
+
+  if (!MDNS.begin("defumaiot")) {
+    Serial.println(F("Error setting up MDNS responder!"));
+  }
+  // Add Web Server service to mDNS
+  MDNS.addService("http", "tcp", 80);
 }
 
 void loop(){
@@ -220,4 +227,6 @@ void loop(){
       noTone(BUZZ);
     }
   }
+
+  MDNS.update();
 }
