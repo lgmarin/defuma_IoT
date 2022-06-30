@@ -32,28 +32,52 @@ int calcChecksum(uint8_t* address, uint16_t sizeToCalc)
   return checkSum;
 }
 
-bool loadConfigData()
+
+// bool loadConfigData(const Config *config, size_t size, char* filename)
+// {
+//   File file = LittleFS.open(wifi_config_file, "r");
+//   Serial.println(F("Loading Config File..."));
+
+//   Config cfg;
+
+//   // Load Wifi Credentials and IP Configuration
+//   memset((void *) &WM_config,       0, sizeof(WM_config));
+//   memset((void *) &Thr_config,      0, sizeof(Thr_config));
+
+//   if (file)
+//   {
+//     file.readBytes((char *) &WM_config,   sizeof(WM_config));
+//     file.readBytes((char *) &Thr_config, sizeof(Thr_config));
+
+//     file.close();
+//     Serial.println(F("Config File Read. Checksum check..."));
+
+//     if ( WM_config.checksum != calcChecksum( (uint8_t*) &WM_config, sizeof(WM_config) - sizeof(WM_config.checksum) ) )
+//     {
+//       Serial.println(F("Wifi Credentials checksum wrong!"));
+//       return false;
+//     }
+//     Serial.println(F("Config File Loaded!"));
+//     return true;
+//   }
+//   else
+//   {
+//     Serial.println(F("Loading Config File Failed!"));
+//     return false;
+//   }
+// }
+
+bool loadConfigData(void *str_Config, size_t size, char* filename)
 {
-  File file = LittleFS.open(wifi_config_file, "r");
+  File file = LittleFS.open(filename, "r");
   Serial.println(F("Loading Config File..."));
 
-  // Load Wifi Credentials and IP Configuration
-  memset((void *) &WM_config,       0, sizeof(WM_config));
-  memset((void *) &Thr_config,      0, sizeof(Thr_config));
+  memset(str_Config, 0, size);
 
   if (file)
   {
-    file.readBytes((char *) &WM_config,   sizeof(WM_config));
-    file.readBytes((char *) &Thr_config, sizeof(Thr_config));
-
+    file.readBytes((char *) str_Config, size);
     file.close();
-    Serial.println(F("Config File Read. Checksum check..."));
-
-    if ( WM_config.checksum != calcChecksum( (uint8_t*) &WM_config, sizeof(WM_config) - sizeof(WM_config.checksum) ) )
-    {
-      Serial.println(F("Wifi Credentials checksum wrong!"));
-      return false;
-    }
     Serial.println(F("Config File Loaded!"));
     return true;
   }
@@ -116,8 +140,14 @@ void storeWifiCred(String SSID, String password)
 
 bool loadWifiCred()
 {
-  if(loadConfigData())
+  if(loadConfigData(&WM_config, sizeof(WM_config), (char*) wifi_config_file))
   {
+    Serial.println(F("Wifi Config File Read. Checksum check..."));
+    if ( WM_config.checksum != calcChecksum( (uint8_t*) &WM_config, sizeof(WM_config) - sizeof(WM_config.checksum) ) )
+    {
+      Serial.println(F("Wifi Credentials checksum wrong!"));
+      return false;
+    }
     for (uint8_t i = 0; i < NUM_WIFI_CREDENTIALS; i++)
     {
       // Don't permit NULL SSID and password len < MIN_AP_PASSWORD_SIZE (8)
