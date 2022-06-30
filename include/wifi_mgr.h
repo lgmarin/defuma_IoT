@@ -67,7 +67,7 @@ typedef struct
 {
   char temp_max[3];
   char temp_min[3];
-} Thr_Config;
+} APP_Config;
 
 typedef struct
 {
@@ -78,6 +78,6 @@ typedef struct
 } WM_Config;
 
 extern WM_Config         WM_config;
-extern Thr_Config        Thr_config;
+extern APP_Config        APP_config;
 
 #endif

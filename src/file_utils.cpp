@@ -8,7 +8,7 @@ const char* wifi_config_file = "/wifi_cfg.dat";
 const char* config_file = "/config.dat";
 
 WM_Config         WM_config;
-Thr_Config        Thr_config;
+APP_Config        APP_config;
 
 // Initialize LittleFS
 void initFS() {
@@ -75,7 +75,6 @@ bool saveConfigData(void *str_Config, size_t size, char* filename)
 
 void storeWifiCred(String SSID, String password)
 {
-  // Stored  for later usage, from v1.1.0, but clear first
   memset(&WM_config, 0, sizeof(WM_config));
   
   for (uint8_t i = 0; i < NUM_WIFI_CREDENTIALS; i++)
@@ -186,4 +185,38 @@ void checkWifiStatus()
       connectMultiWifi();
     } 
   }
+}
+
+bool loadThresholdConfig()
+{
+  if(loadConfigData(&APP_config, sizeof(APP_config), (char*) config_file))
+  {
+    Serial.print(F("\nWifi Config File Read."));
+    Serial.print(APP_config.temp_max);
+    Serial.print(APP_config.temp_min);
+    return true;
+  }
+  return false;
+}
+
+bool storeThresholdConfig(String t_max, String t_min)
+{
+  memset(&APP_config, 0, sizeof(APP_config));
+  
+  if (strlen(t_max.c_str()) < sizeof(APP_config.temp_max) - 1)
+    strcpy(APP_config.temp_max, t_max.c_str());
+  else
+    strncpy(APP_config.temp_max, t_max.c_str(), sizeof(APP_config.temp_max) - 1);
+
+  if (strlen(t_min.c_str()) < sizeof(APP_config.temp_min) - 1)
+    strcpy(APP_config.temp_min, t_min.c_str());
+  else
+    strncpy(APP_config.temp_min, t_min.c_str(), sizeof(APP_config.temp_min) - 1);  
+
+  // Don't permit NULL values
+  if ( (String(APP_config.temp_max) != "") && (strlen(APP_config.temp_min) >= MIN_AP_PASSWORD_SIZE) )
+    return false;
+
+  if( saveConfigData(&WM_config, sizeof(WM_config), (char*) wifi_config_file) )
+    return true;
 }
