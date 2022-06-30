@@ -4,7 +4,7 @@
 #include <SPI.h>
 #include <TM1637Display.h>
 
-//#include "wifi_mgr.h"
+#include "wifi_mgr.h"
 #include "read_temp.h"
 #include "file_utils.h"
 
