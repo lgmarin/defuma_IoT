@@ -219,4 +219,6 @@ bool storeThresholdConfig(String t_max, String t_min)
 
   if( saveConfigData(&WM_config, sizeof(WM_config), (char*) wifi_config_file) )
     return true;
+
+  return false;
 }
