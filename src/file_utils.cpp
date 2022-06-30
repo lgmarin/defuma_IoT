@@ -32,7 +32,6 @@ int calcChecksum(uint8_t* address, uint16_t sizeToCalc)
   return checkSum;
 }
 
-
 // bool loadConfigData(const Config *config, size_t size, char* filename)
 // {
 //   File file = LittleFS.open(wifi_config_file, "r");
@@ -88,24 +87,44 @@ bool loadConfigData(void *str_Config, size_t size, char* filename)
   }
 }
 
-void saveConfigData()
+// void saveConfigData()
+// {
+//   File file = LittleFS.open(wifi_config_file, "w");
+//   Serial.println(F("Saving Config File..."));
+
+//   if (file)
+//   {
+//     WM_config.checksum = calcChecksum( (uint8_t*) &WM_config, sizeof(WM_config) - sizeof(WM_config.checksum) );
+
+//     file.write((uint8_t*) &WM_config, sizeof(WM_config));
+//     file.write((uint8_t*) &Thr_config, sizeof(Thr_config));
+
+//     file.close();
+//     Serial.println(F("Config File Saved!"));
+//   }
+//   else
+//   {
+//       Serial.println(F("Saving Config File Failed!"));
+//   }
+// }
+
+bool saveConfigData(void *str_Config, size_t size, char* filename)
 {
-  File file = LittleFS.open(wifi_config_file, "w");
+  File file = LittleFS.open(filename, "w");
   Serial.println(F("Saving Config File..."));
 
   if (file)
   {
-    WM_config.checksum = calcChecksum( (uint8_t*) &WM_config, sizeof(WM_config) - sizeof(WM_config.checksum) );
-
-    file.write((uint8_t*) &WM_config, sizeof(WM_config));
-    file.write((uint8_t*) &Thr_config, sizeof(Thr_config));
-
+    file.write((uint8_t*) str_Config, size);
     file.close();
+
     Serial.println(F("Config File Saved!"));
+    return true;
   }
   else
   {
       Serial.println(F("Saving Config File Failed!"));
+      return false;
   }
 }
 
@@ -116,26 +135,28 @@ void storeWifiCred(String SSID, String password)
   
   for (uint8_t i = 0; i < NUM_WIFI_CREDENTIALS; i++)
   {
-      String tempSSID = SSID;
-      String tempPW   = password;
+    String tempSSID = SSID;
+    String tempPW   = password;
 
-      if (strlen(tempSSID.c_str()) < sizeof(WM_config.WiFi_Creds[i].wifi_ssid) - 1)
-          strcpy(WM_config.WiFi_Creds[i].wifi_ssid, tempSSID.c_str());
-      else
-          strncpy(WM_config.WiFi_Creds[i].wifi_ssid, tempSSID.c_str(), sizeof(WM_config.WiFi_Creds[i].wifi_ssid) - 1);
+    if (strlen(tempSSID.c_str()) < sizeof(WM_config.WiFi_Creds[i].wifi_ssid) - 1)
+      strcpy(WM_config.WiFi_Creds[i].wifi_ssid, tempSSID.c_str());
+    else
+      strncpy(WM_config.WiFi_Creds[i].wifi_ssid, tempSSID.c_str(), sizeof(WM_config.WiFi_Creds[i].wifi_ssid) - 1);
 
-      if (strlen(tempPW.c_str()) < sizeof(WM_config.WiFi_Creds[i].wifi_pw) - 1)
-          strcpy(WM_config.WiFi_Creds[i].wifi_pw, tempPW.c_str());
-      else
-          strncpy(WM_config.WiFi_Creds[i].wifi_pw, tempPW.c_str(), sizeof(WM_config.WiFi_Creds[i].wifi_pw) - 1);  
+    if (strlen(tempPW.c_str()) < sizeof(WM_config.WiFi_Creds[i].wifi_pw) - 1)
+      strcpy(WM_config.WiFi_Creds[i].wifi_pw, tempPW.c_str());
+    else
+      strncpy(WM_config.WiFi_Creds[i].wifi_pw, tempPW.c_str(), sizeof(WM_config.WiFi_Creds[i].wifi_pw) - 1);  
 
-      // Don't permit NULL SSID and password len < MIN_AP_PASSWORD_SIZE (8)
-      if ( (String(WM_config.WiFi_Creds[i].wifi_ssid) != "") && (strlen(WM_config.WiFi_Creds[i].wifi_pw) >= MIN_AP_PASSWORD_SIZE) )
-      {
-          Serial.println(F("Invalid SSID or Password!"));
-      }
+    // Don't permit NULL SSID and password len < MIN_AP_PASSWORD_SIZE (8)
+    if ( (String(WM_config.WiFi_Creds[i].wifi_ssid) != "") && (strlen(WM_config.WiFi_Creds[i].wifi_pw) >= MIN_AP_PASSWORD_SIZE) )
+    {
+      Serial.println(F("Invalid SSID or Password!"));
+    }
   }
-  saveConfigData();
+  //Calculate checksum and save credentials
+  WM_config.checksum = calcChecksum((uint8_t*) &WM_config, sizeof(WM_config) - sizeof(WM_config.checksum));
+  saveConfigData(&WM_config, sizeof(WM_config), (char*) wifi_config_file);
 }
 
 bool loadWifiCred()
@@ -153,9 +174,9 @@ bool loadWifiCred()
       // Don't permit NULL SSID and password len < MIN_AP_PASSWORD_SIZE (8)
       if ( (String(WM_config.WiFi_Creds[i].wifi_ssid) != "") && (strlen(WM_config.WiFi_Creds[i].wifi_pw) >= MIN_AP_PASSWORD_SIZE) )
       {
-          Serial.print("Add SSID: ");
-          Serial.println(WM_config.WiFi_Creds[i].wifi_ssid);
-          wifiMulti.addAP(WM_config.WiFi_Creds[i].wifi_ssid, WM_config.WiFi_Creds[i].wifi_pw);
+        Serial.print("Add SSID: ");
+        Serial.println(WM_config.WiFi_Creds[i].wifi_ssid);
+        wifiMulti.addAP(WM_config.WiFi_Creds[i].wifi_ssid, WM_config.WiFi_Creds[i].wifi_pw);
       }
     }
     return true;
