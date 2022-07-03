@@ -178,6 +178,15 @@ void setup(){
     request->send(LittleFS, "/index.html", "text/html", false, processor);
   });
 
+  server.on("/config", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(LittleFS, "/config.html", "text/html", false, config_processor);
+  });
+
+  server.on("/delete-cfg", HTTP_GET, [](AsyncWebServerRequest *request){
+    
+    request->send(200, "text/html", "HTTP GET request sent to your ESP.<br><a href=\"/\">Return to Home Page</a>");
+  });    
+
   server.on("/update", HTTP_GET, [] (AsyncWebServerRequest *request) {
     if (request->hasParam("threshold_max") && request->hasParam("threshold_min")) {
       temp_high = request->getParam("threshold_max")->value();

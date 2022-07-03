@@ -73,10 +73,10 @@ bool removeConfigData(char* filename)
       Serial.print(F("\n[INFO]: File removed!"));
       return true;
     }
-    Serial.print(F("[ERROR]: File couldn't be removed!"));
+    Serial.print(F("[ERROR]: File couldn't be removed! Removal error."));
     return false;
   }
-  Serial.print(F("[ERROR]: File couldn't be removed!"));
+  Serial.print(F("[ERROR]: File couldn't be removed! Not found."));
   return false;
 }
 
