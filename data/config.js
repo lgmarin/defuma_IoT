@@ -8,7 +8,13 @@ var wifi_dialog = document.querySelector('#delete-wifi');
     });
     wifi_dialog.querySelector('.close').addEventListener('click', function() {
         wifi_dialog.close();
-});
+    });
+    wifi_dialog.querySelector('#wifi-confirm').addEventListener('click', function() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/del-wifi", true);
+        xhr.send();        
+        wifi_dialog.close();
+    });    
 
 var cfg_dialog = document.querySelector('#delete-cfg');
     var del_wbtn = document.querySelector('#del-cfg_btn');
@@ -20,7 +26,13 @@ var cfg_dialog = document.querySelector('#delete-cfg');
     });
     cfg_dialog.querySelector('.close').addEventListener('click', function() {
         cfg_dialog.close();
-});
+    });
+    cfg_dialog.querySelector('#cfg-confirm').addEventListener('click', function() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/del-cfg", true);
+        xhr.send();        
+        cfg_dialog.close();
+    });    
 
 function goHome() {
     var xhr = new XMLHttpRequest();
