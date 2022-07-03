@@ -58,13 +58,16 @@ String processor(const String& var){
 
 String config_processor(const String& var){
   if(var == "MODE"){
-    return String(WiFi.status());;
+    //return WiFi.status();
+    return "Status";
   }
   else if(var == "SSID"){
-    return String(WiFi.SSID());
+    //return WiFi.SSID();
+    return "SSID";
   }
   else if(var == "IP"){
-    return String(WiFi.localIP());
+    //return WiFi.localIP();
+    return "IP";
   }
   return String();
 }
@@ -183,8 +186,9 @@ void setup(){
   });
 
   server.on("/delete-cfg", HTTP_GET, [](AsyncWebServerRequest *request){
-    
-    request->send(200, "text/html", "HTTP GET request sent to your ESP.<br><a href=\"/\">Return to Home Page</a>");
+    if(removeThresholdConfig())
+      request->send_P(200, "text/plain", "success");
+    request->send_P(200, "text/plain", "error");
   });    
 
   server.on("/update", HTTP_GET, [] (AsyncWebServerRequest *request) {

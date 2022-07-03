@@ -65,17 +65,18 @@ typedef struct
 
 typedef struct
 {
-  char temp_max[3];
-  char temp_min[3];
-} APP_Config;
-
-typedef struct
-{
   WiFi_Credentials  WiFi_Creds [NUM_WIFI_CREDENTIALS];
   char TZ_Name[TZNAME_MAX_LEN];     // "America/Toronto"
   char TZ[TIMEZONE_MAX_LEN];        // "EST5EDT,M3.2.0,M11.1.0"
   uint16_t checksum;
 } WM_Config;
+
+typedef struct
+{
+  char temp_max[3];
+  char temp_min[3];
+} APP_Config;
+
 
 extern WM_Config         WM_config;
 extern APP_Config        APP_config;

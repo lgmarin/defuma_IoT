@@ -4,11 +4,11 @@
 
 ESP8266WiFiMulti wifiMulti;
 
-const char* wifi_config_file = "/wifi_cfg.dat";
-const char* config_file = "/config.dat";
-
 WM_Config         WM_config;
 APP_Config        APP_config;
+
+const char* wifi_config_file = "/wifi_cfg.dat";
+const char* config_file = "/config.dat";
 
 // Initialize LittleFS
 void initFS() {
@@ -228,9 +228,9 @@ bool storeThresholdConfig(String t_max, String t_min)
   else
     strncpy(APP_config.temp_min, t_min.c_str(), sizeof(APP_config.temp_min) - 1);
 
-    Serial.print(F("\n[INFO]: App Config File Store."));
-    Serial.print(F("\nt_min")); Serial.print(String(APP_config.temp_min));
-    Serial.print(F("\nt_max")); Serial.print(String(APP_config.temp_max));
+  Serial.print(F("\n[INFO]: App Config File Store."));
+  Serial.print(F("\nt_min")); Serial.print(String(APP_config.temp_min));
+  Serial.print(F("\nt_max")); Serial.print(String(APP_config.temp_max));
 
 
   // Don't permit NULL values
@@ -245,5 +245,21 @@ bool storeThresholdConfig(String t_max, String t_min)
   }
 
   Serial.print(F("\n[ERROR]: Could not save APP Configuration."));
+  return false;
+}
+
+bool removeThresholdConfig()
+{
+  if(removeConfigData((char*) config_file))
+    return true;
+
+  return false;
+}
+
+bool removeWifiCred()
+{
+  if(removeConfigData((char*) wifi_config_file))
+    return true;
+
   return false;
 }
