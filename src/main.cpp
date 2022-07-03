@@ -62,7 +62,7 @@ const long interval = 1000;
 
 void setup(){
   Serial.begin(9600);
-  delay(200);
+  delay(1000);
 
  //Intiate SPI transaction
   SPI.begin();
@@ -86,7 +86,7 @@ void setup(){
 
   ESPAsync_WiFiManager ESPAsync_wifiManager(&server, &dnsServer, "defuma_iot");
   
-  Serial.println("[INFO]: Verify if there is some saved credentials...");
+  Serial.print("\n[INFO]: Verify if there is some saved credentials...");
   bool initialConfig = false;
   bool configDataLoaded = false;
 
@@ -94,12 +94,12 @@ void setup(){
   {
       configDataLoaded = true;
       ESPAsync_wifiManager.setConfigPortalTimeout(30);
-      Serial.println(F("[INFO]:Got stored Credentials. Timeout 30s for Config Portal"));
+      Serial.print(F("\n[INFO]:Got stored Credentials. Timeout 30s for Config Portal"));
   }
   else
   {
       // Enter CP only if no stored SSID on flash and file 
-      Serial.println(F("[INFO]:Open Config Portal without Timeout: No stored Credentials."));
+      Serial.print(F("\n[INFO]:Open Config Portal without Timeout: No stored Credentials."));
       initialConfig = true;
   }
 
@@ -109,7 +109,7 @@ void setup(){
 
   // Starts an access point
   if (!ESPAsync_wifiManager.startConfigPortal("defuma_IOT")) //(const char *) ssid.c_str())
-    Serial.println(F("Not connected to WiFi but continuing anyway."));
+    Serial.print(F("\n[INFO]: Configuration portal time out. No Wifi Connected..."));
   else
   {
     Serial.print(F("\n[INFO]: WiFi connected!"));
@@ -149,9 +149,9 @@ void setup(){
     }
   }
 
-  if(loadThresholdConfig) { //Load Initial configuration data
-    temp_low = APP_config.temp_min;
-    temp_high = APP_config.temp_max;
+  if(loadThresholdConfig()) { //Load Initial configuration data
+    temp_low = String(APP_config.temp_min);
+    temp_high = String(APP_config.temp_max);
   }
 
   // AsynWifiManager Block END
@@ -171,10 +171,10 @@ void setup(){
       temp_low = request->getParam("threshold_min")->value();
     }
 
-    Serial.println("Set threshold_max");
-    Serial.println(temp_high);
-    Serial.println("Set threshold_min");
-    Serial.println(temp_low);
+    Serial.print("\n[INFO]: Set threshold_max:");
+    Serial.print(temp_high);
+    Serial.print("\n[INFO]: Set threshold_min:");
+    Serial.print(temp_low);
 
     storeThresholdConfig(temp_high, temp_low);
 
@@ -189,10 +189,11 @@ void setup(){
   server.begin();
 
   if (!MDNS.begin("defumaiot")) {
-    Serial.println(F("Error setting up MDNS responder!"));
+    Serial.print(F("\n[ERROR]: MultiWiFi Configuration..."));
   }
   // Add Web Server service to mDNS
   MDNS.addService("http", "tcp", 80);
+  Serial.print(F("\n[INFO]: mDNS service started. Go to http://defumaiot.local"));
 }
 
 void loop(){

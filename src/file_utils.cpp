@@ -80,7 +80,7 @@ bool removeConfigData(char* filename)
   return false;
 }
 
-void storeWifiCred(String SSID, String password)
+bool storeWifiCred(String SSID, String password)
 {
   memset(&WM_config, 0, sizeof(WM_config));
   
@@ -103,13 +103,19 @@ void storeWifiCred(String SSID, String password)
     if ( (String(WM_config.WiFi_Creds[i].wifi_ssid) != "") && (strlen(WM_config.WiFi_Creds[i].wifi_pw) >= MIN_AP_PASSWORD_SIZE) )
     {
       Serial.println(F("[ERROR]: Invalid SSID or Password!"));
+      return false;
     }
   }
   //Calculate checksum and save credentials
   WM_config.checksum = calcChecksum((uint8_t*) &WM_config, sizeof(WM_config) - sizeof(WM_config.checksum));
   if (saveConfigData(&WM_config, sizeof(WM_config), (char*) wifi_config_file))
+  {
     Serial.print(F("\n[INFO]: Wifi Credentials file saved!"));
+    return true;
+  }
+
   Serial.print(F("\n[ERROR]: Could not store Wifi Config File"));
+  return false;
 }
 
 bool loadWifiCred()
@@ -126,7 +132,6 @@ bool loadWifiCred()
       // Don't permit NULL SSID and password len < MIN_AP_PASSWORD_SIZE (8)
       if ( (String(WM_config.WiFi_Creds[i].wifi_ssid) != "") && (strlen(WM_config.WiFi_Creds[i].wifi_pw) >= MIN_AP_PASSWORD_SIZE) )
       {
-        Serial.println(WM_config.WiFi_Creds[i].wifi_ssid);
         wifiMulti.addAP(WM_config.WiFi_Creds[i].wifi_ssid, WM_config.WiFi_Creds[i].wifi_pw);
       }
     }
@@ -184,7 +189,7 @@ void checkWifiStatus()
 
   current_millis = millis();
 
-  if ( (WiFi.status() != WL_CONNECTED) )
+  if ((WiFi.status() != WL_CONNECTED))
   {
     // Check WiFi every WIFICHECK_INTERVAL (1) seconds.
     if ((current_millis > checkwifi_timeout) || (checkwifi_timeout == 0))
@@ -201,8 +206,8 @@ bool loadThresholdConfig()
   if(loadConfigData(&APP_config, sizeof(APP_config), (char*) config_file))
   {
     Serial.print(F("\n[INFO]: App Config File Read."));
-    Serial.print(APP_config.temp_max);
-    Serial.print(APP_config.temp_min);
+    Serial.print(F("\nt_min")); Serial.print(String(APP_config.temp_min));
+    Serial.print(F("\nt_max")); Serial.print(String(APP_config.temp_max));
     return true;
   }
   Serial.print(F("\n[ERROR]: Could not read App Config File"));
@@ -221,15 +226,20 @@ bool storeThresholdConfig(String t_max, String t_min)
   if (strlen(t_min.c_str()) < sizeof(APP_config.temp_min) - 1)
     strcpy(APP_config.temp_min, t_min.c_str());
   else
-    strncpy(APP_config.temp_min, t_min.c_str(), sizeof(APP_config.temp_min) - 1);  
+    strncpy(APP_config.temp_min, t_min.c_str(), sizeof(APP_config.temp_min) - 1);
+
+    Serial.print(F("\n[INFO]: App Config File Store."));
+    Serial.print(F("\nt_min")); Serial.print(String(APP_config.temp_min));
+    Serial.print(F("\nt_max")); Serial.print(String(APP_config.temp_max));
+
 
   // Don't permit NULL values
-  if (String(APP_config.temp_max) != ""){
+  if (String(APP_config.temp_max) == ""){
     Serial.print(F("\n[ERROR]: Invalid null Threshold value."));
     return false;
   }
 
-  if(saveConfigData(&WM_config, sizeof(WM_config), (char*) wifi_config_file)){
+  if(saveConfigData(&WM_config, sizeof(WM_config), (char*) config_file)){
     Serial.print(F("\n[INFO]: APP Configuration saved!"));
     return true;
   }
