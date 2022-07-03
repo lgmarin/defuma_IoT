@@ -30,8 +30,8 @@ float temperature = 0;
 // BUZZ -> D0 - GPIO16
 int BUZZ = 16;
 
-String temp_low = "20";
-String temp_high = "26";
+String temp_low;
+String temp_high;
 String last_temperature;
 
 void notFound(AsyncWebServerRequest *request) {
@@ -150,7 +150,16 @@ void setup(){
       Serial.println(F("ConnectMultiWiFi in setup"));
       connectMultiWifi();
     }
-  }  
+  }
+
+  if(!loadThresholdConfig) { //Load Initial configuration data
+    String temp_low = "20";
+    String temp_high = "26";
+  } else {
+    temp_low = APP_config.temp_min;
+    temp_high = APP_config.temp_max;
+  }
+
   // AsynWifiManager Block END
 
   display.clear();
@@ -172,6 +181,8 @@ void setup(){
     Serial.println(temp_high);
     Serial.println("Set threshold_min");
     Serial.println(temp_low);
+
+    storeThresholdConfig(temp_high, temp_low);
 
     request->send(200, "text/html", "HTTP GET request sent to your ESP.<br><a href=\"/\">Return to Home Page</a>");
   });
