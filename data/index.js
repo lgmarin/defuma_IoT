@@ -9,3 +9,9 @@ setInterval(function ( ) {
         xhttp.send();
     }, 3000 
 );
+
+function goConfig() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/config", true);
+    xhr.send();
+}
