@@ -86,7 +86,7 @@ void setup(){
 
   ESPAsync_WiFiManager ESPAsync_wifiManager(&server, &dnsServer, "defuma_iot");
   
-  Serial.println("Verify if there is some saved credentials...");
+  Serial.println("[INFO]: Verify if there is some saved credentials...");
   bool initialConfig = false;
   bool configDataLoaded = false;
 
@@ -94,43 +94,40 @@ void setup(){
   {
       configDataLoaded = true;
       ESPAsync_wifiManager.setConfigPortalTimeout(30);
-      Serial.println(F("Got stored Credentials. Timeout 30s for Config Portal"));
+      Serial.println(F("[INFO]:Got stored Credentials. Timeout 30s for Config Portal"));
   }
   else
   {
       // Enter CP only if no stored SSID on flash and file 
-      Serial.println(F("Open Config Portal without Timeout: No stored Credentials."));
+      Serial.println(F("[INFO]:Open Config Portal without Timeout: No stored Credentials."));
       initialConfig = true;
   }
 
-  Serial.println(F("Starting configuration portal @ "));
-  Serial.print(F("192.168.4.1"));
+  Serial.print("\n[INFO]:Starting configuration portal @ "); Serial.print("192.168.4.1");
 
   digitalWrite(LED_BUILTIN, LOW); // turn the LED on by making the voltage LOW to tell us we are in configuration mode.
 
   // Starts an access point
   if (!ESPAsync_wifiManager.startConfigPortal("defuma_IOT")) //(const char *) ssid.c_str())
-      Serial.println(F("Not connected to WiFi but continuing anyway."));
+    Serial.println(F("Not connected to WiFi but continuing anyway."));
   else
   {
-      Serial.println(F("WiFi connected...yeey :)"));
+    Serial.print(F("\n[INFO]: WiFi connected!"));
   }  
 
   if (WiFi.status() == WL_CONNECTED)
   {
-      Serial.println(F("Connected. Local IP: "));
-      Serial.print(WiFi.localIP());
+    Serial.print(F("\n[INFO]: Connected. Local IP: ")); Serial.print(WiFi.localIP());
   } else
   {
-      Serial.println(ESPAsync_wifiManager.getStatus(WiFi.status()));
-      Serial.println("Can't connect! Entering WiFi config mode...");
-      ESPAsync_wifiManager.startConfigPortal("defuma_IOT"); //(const char *) ssid.c_str())
+    Serial.print("\n[ERROR]: WiFi not connected, with status: "); Serial.print(ESPAsync_wifiManager.getStatus(WiFi.status()));
+    ESPAsync_wifiManager.startConfigPortal("defuma_IOT"); //(const char *) ssid.c_str())
   }
 
   // Only clear then save data if CP entered and with new valid Credentials
   if (String(ESPAsync_wifiManager.getSSID(0)) != "" && String(ESPAsync_wifiManager.getPW(0)) != "")
   {
-    Serial.print("Connected at: ");
+    Serial.print(F("\n[INFO]: WiFi connected! Saving config..."));
     String SSID = ESPAsync_wifiManager.getSSID(0);
     String PW = ESPAsync_wifiManager.getPW(0);
     Serial.println(SSID);
@@ -147,7 +144,7 @@ void setup(){
       loadWifiCred();
     if ( WiFi.status() != WL_CONNECTED ) 
     {
-      Serial.println(F("ConnectMultiWiFi in setup"));
+      Serial.print(F("\n[INFO]: MultiWiFi Configuration..."));
       connectMultiWifi();
     }
   }
@@ -220,11 +217,9 @@ void loop(){
     last_temperature = String(temperature);
     
     if(temperature > temp_high.toFloat() && temperature != NAN){
-      Serial.println(message);
       tone(BUZZ, 523, 800);
     }
     else if(temperature < temp_low.toFloat() && temperature != NAN){
-      Serial.println(message);
       tone(BUZZ, 1000, 200);
     }
     else {
