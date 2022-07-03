@@ -56,6 +56,19 @@ String processor(const String& var){
   return String();
 }
 
+String config_processor(const String& var){
+  if(var == "MODE"){
+    return String(WiFi.status());;
+  }
+  else if(var == "SSID"){
+    return String(WiFi.SSID());
+  }
+  else if(var == "IP"){
+    return String(WiFi.localIP());
+  }
+  return String();
+}
+
 // Configure time interval between readings - 1 second
 unsigned long previousMillis = 0;
 const long interval = 1000;
