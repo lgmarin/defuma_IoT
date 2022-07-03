@@ -203,7 +203,7 @@ bool loadThresholdConfig()
 {
   if(loadConfigData(&APP_config, sizeof(APP_config), (char*) config_file))
   {
-    Serial.print(F("\nWifi Config File Read."));
+    Serial.print(F("\nApp Config File Read."));
     Serial.print(APP_config.temp_max);
     Serial.print(APP_config.temp_min);
     return true;

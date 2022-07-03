@@ -30,8 +30,8 @@ float temperature = 0;
 // BUZZ -> D0 - GPIO16
 int BUZZ = 16;
 
-String temp_low;
-String temp_high;
+String temp_low = "20";
+String temp_high = "26";
 String last_temperature;
 
 void notFound(AsyncWebServerRequest *request) {
@@ -152,10 +152,7 @@ void setup(){
     }
   }
 
-  if(!loadThresholdConfig) { //Load Initial configuration data
-    String temp_low = "20";
-    String temp_high = "26";
-  } else {
+  if(loadThresholdConfig) { //Load Initial configuration data
     temp_low = APP_config.temp_min;
     temp_high = APP_config.temp_max;
   }
@@ -223,14 +220,10 @@ void loop(){
     last_temperature = String(temperature);
     
     if(temperature > temp_high.toFloat() && temperature != NAN){
-      String message = String("Temperature is too high. Current temperature: ") + 
-                            String(temperature) + String("C");
       Serial.println(message);
       tone(BUZZ, 523, 800);
     }
     else if(temperature < temp_low.toFloat() && temperature != NAN){
-      String message = String("Temperature is too low. Current temperature: ") + 
-                            String(temperature) + String(" C");
       Serial.println(message);
       tone(BUZZ, 1000, 200);
     }
