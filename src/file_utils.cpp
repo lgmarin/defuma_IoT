@@ -83,6 +83,8 @@ bool removeConfigData(char* filename)
 bool storeWifiCred(String SSID, String password)
 {
   memset(&WM_config, 0, sizeof(WM_config));
+
+  uint8_t null_count = 0
   
   for (uint8_t i = 0; i < NUM_WIFI_CREDENTIALS; i++)
   {
@@ -101,10 +103,14 @@ bool storeWifiCred(String SSID, String password)
 
     // Don't permit NULL SSID and password len < MIN_AP_PASSWORD_SIZE (8)
     if ( (String(WM_config.WiFi_Creds[i].wifi_ssid) != "") && (strlen(WM_config.WiFi_Creds[i].wifi_pw) >= MIN_AP_PASSWORD_SIZE) )
+      null_count++
+
+    if (null_count == NUM_WIFI_CREDENTIALS)
     {
       Serial.println(F("[ERROR]: Invalid SSID or Password!"));
       return false;
     }
+    
   }
   //Calculate checksum and save credentials
   WM_config.checksum = calcChecksum((uint8_t*) &WM_config, sizeof(WM_config) - sizeof(WM_config.checksum));
@@ -177,7 +183,7 @@ void connectMultiWifi()
   }
   else
   {
-    Serial.println(F("\n[EROR]: No WiFi connected, reseting ESP!")); 
+    Serial.println(F("\n[ERROR]: No WiFi connected, reseting ESP!")); 
     ESP.reset();
   }
 }
@@ -205,8 +211,8 @@ bool loadThresholdConfig()
   if(loadConfigData(&APP_config, sizeof(APP_config), (char*) config_file))
   {
     Serial.print(F("\n[INFO]: App Config File Read."));
-    Serial.print(F("\nt_min")); Serial.print(String(APP_config.temp_min));
-    Serial.print(F("\nt_max")); Serial.print(String(APP_config.temp_max));
+    Serial.print(F("\nt_min ")); Serial.print(String(APP_config.temp_min));
+    Serial.print(F("\nt_max ")); Serial.print(String(APP_config.temp_max));
     return true;
   }
 
@@ -229,8 +235,8 @@ bool storeThresholdConfig(String t_max, String t_min)
     strncpy(APP_config.temp_min, t_min.c_str(), sizeof(APP_config.temp_min) - 1);
 
   Serial.print(F("\n[INFO]: App Config File Store."));
-  Serial.print(F("\nt_min")); Serial.print(String(APP_config.temp_min));
-  Serial.print(F("\nt_max")); Serial.print(String(APP_config.temp_max));
+  Serial.print(F("\nt_min: ")); Serial.print(String(APP_config.temp_min));
+  Serial.print(F("\nt_max: ")); Serial.print(String(APP_config.temp_max));
 
 
   // Don't permit NULL values

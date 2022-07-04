@@ -61,16 +61,16 @@ String config_processor(const String& var){
     switch (WiFi.getMode())
     {
     case WIFI_STA:
-      return "Station";
+      return "Conectado : Cliente";
       break;
     case WIFI_AP:
-      return "Access Point";
+      return "Conectado : AP";
       break;
     case WIFI_AP_STA:
-      return "Access Point + Station";
+      return "Conectado : AP + Cliente";
       break;          
     default:
-      return "Disconnected";
+      return "";
       break;
     }
   }
