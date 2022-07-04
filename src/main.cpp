@@ -58,16 +58,27 @@ String processor(const String& var){
 
 String config_processor(const String& var){
   if(var == "MODE"){
-    //return WiFi.status();
-    return "Status";
+    switch (WiFi.getMode())
+    {
+    case WIFI_STA:
+      return "Station";
+      break;
+    case WIFI_AP:
+      return "Access Point";
+      break;
+    case WIFI_AP_STA:
+      return "Access Point + Station";
+      break;          
+    default:
+      return "Disconnected";
+      break;
+    }
   }
   else if(var == "SSID"){
-    //return WiFi.SSID();
-    return "SSID";
+    return WiFi.SSID();
   }
   else if(var == "IP"){
-    //return WiFi.localIP();
-    return "IP";
+    return WiFi.localIP().toString();
   }
   return String();
 }
