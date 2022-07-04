@@ -13,10 +13,10 @@ const char* config_file = "/config.dat";
 // Initialize LittleFS
 void initFS() {
   if (!LittleFS.begin()) {
-    Serial.print("\n[ERROR]: An error has occurred while mounting LittleFS");
+    Serial.print(F("\n[ERROR]: An error has occurred while mounting LittleFS"));
   }
   else{
-    Serial.print("\n[INFO]: LittleFS mounted successfully");
+    Serial.print(F("\n[INFO]: LittleFS mounted successfully"));
   }
 }
 
@@ -171,9 +171,9 @@ void connectMultiWifi()
   if ( status == WL_CONNECTED )
   {
     Serial.println(F("\n[INFO] WiFi connected!"));
-    Serial.print("\nSSID: "); Serial.print(WiFi.SSID()); 
-    Serial.print("\nRSSI= "); Serial.print(WiFi.RSSI());
-    Serial.print("\nIP address: "), Serial.print(WiFi.localIP());
+    Serial.print(F("\nSSID: ")); Serial.print(WiFi.SSID()); 
+    Serial.print(F("\nRSSI= ")); Serial.print(WiFi.RSSI());
+    Serial.print(F("\nIP address: ")), Serial.print(WiFi.localIP());
   }
   else
   {
@@ -239,7 +239,7 @@ bool storeThresholdConfig(String t_max, String t_min)
     return false;
   }
 
-  if(saveConfigData(&WM_config, sizeof(WM_config), (char*) config_file)){
+  if(saveConfigData(&APP_config, sizeof(APP_config), (char*) config_file)){
     Serial.print(F("\n[INFO]: APP Configuration saved!"));
     return true;
   }

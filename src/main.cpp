@@ -147,7 +147,7 @@ void setup(){
     Serial.print(F("\n[INFO]: Connected. Local IP: ")); Serial.print(WiFi.localIP());
   } else
   {
-    Serial.print("\n[ERROR]: WiFi not connected, with status: "); Serial.print(ESPAsync_wifiManager.getStatus(WiFi.status()));
+    Serial.print(F("\n[ERROR]: WiFi not connected, with status: ")); Serial.print(ESPAsync_wifiManager.getStatus(WiFi.status()));
     ESPAsync_wifiManager.startConfigPortal("defuma_IOT"); //(const char *) ssid.c_str())
   }
 
@@ -244,7 +244,7 @@ void loop(){
 
     if (temperature == NAN)
     {
-      Serial.print("Error: No Thermocouple connected!");
+      Serial.print(F("Error: No Thermocouple connected!"));
     } 
     else
     {
