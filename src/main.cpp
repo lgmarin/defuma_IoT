@@ -200,7 +200,7 @@ void setup(){
     if(removeThresholdConfig())
       request->send_P(200, "text/plain", "success");
     request->send_P(200, "text/plain", "error");
-  });    
+  });
 
   server.on("/update", HTTP_GET, [] (AsyncWebServerRequest *request) {
     if (request->hasParam("threshold_max") && request->hasParam("threshold_min")) {
