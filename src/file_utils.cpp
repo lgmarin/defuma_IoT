@@ -84,8 +84,7 @@ bool storeWifiCred(String SSID, String password)
 {
   memset(&WM_config, 0, sizeof(WM_config));
 
-  uint8_t null_count = 0
-  
+ 
   for (uint8_t i = 0; i < NUM_WIFI_CREDENTIALS; i++)
   {
     String tempSSID = SSID;
@@ -102,15 +101,9 @@ bool storeWifiCred(String SSID, String password)
       strncpy(WM_config.WiFi_Creds[i].wifi_pw, tempPW.c_str(), sizeof(WM_config.WiFi_Creds[i].wifi_pw) - 1);  
 
     // Don't permit NULL SSID and password len < MIN_AP_PASSWORD_SIZE (8)
-    if ( (String(WM_config.WiFi_Creds[i].wifi_ssid) != "") && (strlen(WM_config.WiFi_Creds[i].wifi_pw) >= MIN_AP_PASSWORD_SIZE) )
-      null_count++
+    if ((String(WM_config.WiFi_Creds[i].wifi_ssid) = "") && (String(WM_config.WiFi_Creds[i].wifi_pw) = ""))
+      Serial.println(F("[ERROR]: Null SID or Password!"));
 
-    if (null_count == NUM_WIFI_CREDENTIALS)
-    {
-      Serial.println(F("[ERROR]: Invalid SSID or Password!"));
-      return false;
-    }
-    
   }
   //Calculate checksum and save credentials
   WM_config.checksum = calcChecksum((uint8_t*) &WM_config, sizeof(WM_config) - sizeof(WM_config.checksum));
@@ -136,7 +129,7 @@ bool loadWifiCred()
     for (uint8_t i = 0; i < NUM_WIFI_CREDENTIALS; i++)
     {
       // Don't permit NULL SSID and password len < MIN_AP_PASSWORD_SIZE (8)
-      if ( (String(WM_config.WiFi_Creds[i].wifi_ssid) != "") && (strlen(WM_config.WiFi_Creds[i].wifi_pw) >= MIN_AP_PASSWORD_SIZE) )
+      if ( (String(WM_config.WiFi_Creds[i].wifi_ssid) != "") && (String(WM_config.WiFi_Creds[i].wifi_pw) != "") )
       {
         wifiMulti.addAP(WM_config.WiFi_Creds[i].wifi_ssid, WM_config.WiFi_Creds[i].wifi_pw);
       }
