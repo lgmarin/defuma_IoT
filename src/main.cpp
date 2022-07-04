@@ -80,6 +80,10 @@ String config_processor(const String& var){
   else if(var == "IP"){
     return WiFi.localIP().toString();
   }
+  else if (var == "MAC")
+  {
+    return WiFi.macAddress();
+  }
   return String();
 }
 
