@@ -152,7 +152,7 @@ void connectMultiWifi()
 
   uint8_t status;
 
-  Serial.println(F("\n[INFO]: Connecting MultiWifi..."));
+  Serial.print(F("\n[INFO]: Connecting MultiWifi..."));
 
   int i = 0;
   status = wifiMulti.run();
@@ -170,7 +170,7 @@ void connectMultiWifi()
 
   if ( status == WL_CONNECTED )
   {
-    Serial.println(F("\n[INFO] WiFi connected!"));
+    Serial.print(F("\n[INFO] WiFi connected!"));
     Serial.print(F("\nSSID: ")); Serial.print(WiFi.SSID()); 
     Serial.print(F("\nRSSI= ")); Serial.print(WiFi.RSSI());
     Serial.print(F("\nIP address: ")), Serial.print(WiFi.localIP());
@@ -191,7 +191,6 @@ void checkWifiStatus()
 
   if ((WiFi.status() != WL_CONNECTED))
   {
-    // Check WiFi every WIFICHECK_INTERVAL (1) seconds.
     if ((current_millis > checkwifi_timeout) || (checkwifi_timeout == 0))
     {
       checkwifi_timeout = current_millis + WIFICHECK_INTERVAL;      
@@ -210,6 +209,7 @@ bool loadThresholdConfig()
     Serial.print(F("\nt_max")); Serial.print(String(APP_config.temp_max));
     return true;
   }
+
   Serial.print(F("\n[ERROR]: Could not read App Config File"));
   return false;
 }
