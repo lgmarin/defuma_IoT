@@ -1,6 +1,6 @@
 var wifi_dialog = document.querySelector('#delete-wifi');
     var del_wbtn = document.querySelector('#del-wifi_btn');
-    if (! wifi_dialog.showModal) {
+    if (!wifi_dialog.showModal) {
       dialogPolyfill.registerDialog(wifi_dialog);
     }
     del_wbtn.addEventListener('click', function() {
@@ -18,7 +18,7 @@ var wifi_dialog = document.querySelector('#delete-wifi');
 
 var cfg_dialog = document.querySelector('#delete-cfg');
     var del_wbtn = document.querySelector('#del-cfg_btn');
-    if (! cfg_dialog.showModal) {
+    if (!cfg_dialog.showModal) {
       dialogPolyfill.registerDialog(cfg_dialog);
     }
     del_wbtn.addEventListener('click', function() {
