@@ -192,21 +192,21 @@ void setup(){
   // Configure Server Async calls
   server.serveStatic("/", LittleFS, "/");
 
+  server.on("/redirect/home", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->redirect("/");
+  });  
+
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(LittleFS, "/index.html", "text/html", false, processor);
   });
 
+  server.on("/redirect/config", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->redirect("/config");
+  });  
+
   server.on("/config", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(LittleFS, "/config.html", "text/html", false, config_processor);
   });
-
-  server.on("/redirect/config", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->redirect("/config");
-  });
-
-  server.on("/redirect/home", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->redirect("/");
-  });  
 
   server.on("/delete-cfg", HTTP_GET, [](AsyncWebServerRequest *request){
     if(removeThresholdConfig())
