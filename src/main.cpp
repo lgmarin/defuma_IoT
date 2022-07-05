@@ -200,6 +200,14 @@ void setup(){
     request->send(LittleFS, "/config.html", "text/html", false, config_processor);
   });
 
+  server.on("/redirect/config", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->redirect("/config");
+  });
+
+  server.on("/redirect/home", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->redirect("/");
+  });  
+
   server.on("/delete-cfg", HTTP_GET, [](AsyncWebServerRequest *request){
     if(removeThresholdConfig())
       request->send_P(200, "text/plain", "success");
