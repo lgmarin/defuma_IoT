@@ -233,12 +233,14 @@ bool storeThresholdConfig(String t_max, String t_min)
 
 
   // Don't permit NULL values
-  if (String(APP_config.temp_max) == ""){
+  if (String(APP_config.temp_max) == "")
+  {
     Serial.print(F("\n[ERROR]: Invalid null Threshold value."));
     return false;
   }
 
-  if(saveConfigData(&APP_config, sizeof(APP_config), (char*) config_file)){
+  if(saveConfigData(&APP_config, sizeof(APP_config), (char*) config_file))
+  {
     Serial.print(F("\n[INFO]: APP Configuration saved!"));
     return true;
   }

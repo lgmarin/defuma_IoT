@@ -123,8 +123,7 @@
           });
           wifi_dialog.querySelector('#wifi-confirm').addEventListener('click', function() {
               var xhr = new XMLHttpRequest();
-              xhr.open("GET", "/delete-wifi", true);
-              xhr.send();
+              location.replace("https://%DEVICE_IP%/delete-wifi");
               wifi_dialog.close();
           });
       var cfg_dialog = document.querySelector('#delete-cfg');
@@ -139,15 +138,11 @@
               cfg_dialog.close();
           });
           cfg_dialog.querySelector('#cfg-confirm').addEventListener('click', function() {
-              var xhr = new XMLHttpRequest();
-              xhr.open("GET", "/delete-cfg", true);
-              xhr.send();        
+            location.replace("https://%DEVICE_IP%/delete_config");
               cfg_dialog.close();
           });    
       function goHome() {
-          var xhr = new XMLHttpRequest();
-          xhr.open("GET", '/redirect/home', true);
-          xhr.send();
+        location.replace("https://%DEVICE_IP%/");
       }      
     </script>
     <!-- <script src="vendor/material.js"></script> -->

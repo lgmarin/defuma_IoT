@@ -95,9 +95,7 @@
       );
 
       function goConfig() {
-          var xhr = new XMLHttpRequest();
-          xhr.open("GET", "/redirect/config");
-          xhr.send();
+        location.replace("https://%DEVICE_IP%/config");
       }      
     </script>
     <!-- <script src="https://code.getmdl.io/1.3.0/material.min.js"></script> -->

@@ -192,26 +192,24 @@ void setup(){
   // Configure Server Async calls
   server.serveStatic("/", LittleFS, "/");
 
-  server.on("/redirect/home", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->redirect("/");
-  });  
-
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(LittleFS, "/index.html", "text/html", false, processor);
   });
-
-  server.on("/redirect/config", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->redirect("/config");
-  });  
 
   server.on("/config", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(LittleFS, "/config.html", "text/html", false, config_processor);
   });
 
-  server.on("/delete-cfg", HTTP_GET, [](AsyncWebServerRequest *request){
+  server.on("/delete-config", HTTP_GET, [](AsyncWebServerRequest *request){
     if(removeThresholdConfig())
       request->send_P(200, "text/plain", "success");
-    request->send_P(200, "text/plain", "error");
+    request->send_P(400, "text/plain", "error");
+  });
+
+  server.on("/delete-wifi", HTTP_GET, [](AsyncWebServerRequest *request){
+    if(removeWifiCred())
+      request->send_P(200, "text/plain", "success");
+    request->send_P(400, "text/plain", "error");
   });
 
   server.on("/update", HTTP_GET, [] (AsyncWebServerRequest *request) {
