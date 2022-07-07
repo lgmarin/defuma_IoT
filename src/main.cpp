@@ -24,7 +24,7 @@ TM1637Display display(tm_CLK, tm_DIO);
 // MISO -> D6 - GPIO12
 // CS   -> D7 - GPIO13
 int max_CS = 13;
-float temperature = 0;
+int temperature = 0;
 
 // Buzzer PIN
 // BUZZ -> D0 - GPIO16
@@ -164,7 +164,6 @@ void setup(){
     Serial.print(F("\n[INFO]: WiFi connected! Saving config..."));
     String SSID = ESPAsync_wifiManager.getSSID(0);
     String PW = ESPAsync_wifiManager.getPW(0);
-    Serial.println(SSID);
     storeWifiCred(SSID, PW);   // Store data in struct      
     initialConfig = true;
   }
@@ -267,10 +266,10 @@ void loop(){
     // Keep track of the last temperature read
     last_temperature = String(temperature);
     
-    if(temperature > temp_high.toFloat() && temperature != NAN){
+    if(temperature > temp_high.toInt() && temperature != NAN){
       tone(BUZZ, 523, 800);
     }
-    else if(temperature < temp_low.toFloat() && temperature != NAN){
+    else if(temperature < temp_low.toInt() && temperature != NAN){
       tone(BUZZ, 1000, 200);
     }
     else {
