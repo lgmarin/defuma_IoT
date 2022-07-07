@@ -38,6 +38,7 @@ void notFound(AsyncWebServerRequest *request) {
   request->send(404, "text/plain", "Not found");
 }
 
+const char* hostname = "defumaiot";
 // Open WebServer connection at PORT 80
 AsyncWebServer server(80);
 DNSServer dnsServer;
@@ -80,6 +81,9 @@ String config_processor(const String& var){
   else if(var == "SSID"){
     return WiFi.SSID();
   }
+    else if(var == "HOSTNAME"){
+    return hostname;
+  }
   else if(var == "DEVICE_IP"){
     return WiFi.localIP().toString();
   }
@@ -118,7 +122,7 @@ void setup(){
 
  // AsynWifiManager Block BEGIN
 
-  ESPAsync_WiFiManager ESPAsync_wifiManager(&server, &dnsServer, "defuma_iot");
+  ESPAsync_WiFiManager ESPAsync_wifiManager(&server, &dnsServer, hostname);
   
   Serial.print("\n[INFO]: Verify if there is some saved credentials...");
   bool initialConfig = false;
@@ -142,7 +146,7 @@ void setup(){
   digitalWrite(LED_BUILTIN, LOW); // turn the LED on by making the voltage LOW to tell us we are in configuration mode.
 
   // Starts an access point
-  if (!ESPAsync_wifiManager.startConfigPortal("defuma_IOT")) //(const char *) ssid.c_str())
+  if (!ESPAsync_wifiManager.startConfigPortal(hostname)) //(const char *) ssid.c_str())
     Serial.print(F("\n[INFO]: Configuration portal time out. No Wifi Connected..."));
   else
   {
@@ -155,7 +159,7 @@ void setup(){
   } else
   {
     Serial.print(F("\n[ERROR]: WiFi not connected, with status: ")); Serial.print(ESPAsync_wifiManager.getStatus(WiFi.status()));
-    ESPAsync_wifiManager.startConfigPortal("defuma_IOT"); //(const char *) ssid.c_str())
+    ESPAsync_wifiManager.startConfigPortal(hostname); //(const char *) ssid.c_str())
   }
 
   // Only clear then save data if CP entered and with new valid Credentials
@@ -237,7 +241,7 @@ void setup(){
   server.onNotFound(notFound);
   server.begin();
 
-  if (!MDNS.begin("defumaiot")) {
+  if (!MDNS.begin(hostname)) {
     Serial.print(F("\n[ERROR]: MultiWiFi Configuration..."));
   }
   // Add Web Server service to mDNS
