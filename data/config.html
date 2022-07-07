@@ -59,7 +59,7 @@
                       <span class="mdl-list__item-primary-content">SSID:</span><span id="wifi_ssid">%SSID%</span>
                   </li>
                   <li class="mdl-list__item">
-                      <span class="mdl-list__item-primary-content">IP:</span><span id="wifi_ip">%IP%</span>
+                      <span class="mdl-list__item-primary-content">IP:</span><span id="wifi_ip">%DEVICE_IP%</span>
                   </li>
                   <li class="mdl-list__item">
                     <span class="mdl-list__item-primary-content">MAC:</span><span id="wifi_ip">%MAC%</span>
@@ -123,7 +123,7 @@
           });
           wifi_dialog.querySelector('#wifi-confirm').addEventListener('click', function() {
               var xhr = new XMLHttpRequest();
-              location.replace("https://%DEVICE_IP%/delete-wifi");
+              location.replace("http://%DEVICE_IP%/delete-wifi");
               wifi_dialog.close();
           });
       var cfg_dialog = document.querySelector('#delete-cfg');
@@ -138,12 +138,12 @@
               cfg_dialog.close();
           });
           cfg_dialog.querySelector('#cfg-confirm').addEventListener('click', function() {
-            location.replace("https://%DEVICE_IP%/delete_config");
+            location.replace("http://%DEVICE_IP%/delete_config");
               cfg_dialog.close();
           });    
       function goHome() {
-        location.replace("https://%DEVICE_IP%/");
-      }      
+        location.replace("http://%DEVICE_IP%/");
+      }
     </script>
     <!-- <script src="vendor/material.js"></script> -->
     <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>

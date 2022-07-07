@@ -53,6 +53,9 @@ String processor(const String& var){
   else if(var == "THRESHOLD_MIN"){
     return temp_low;
   }
+  else if(var == "DEVICE_IP"){
+    return WiFi.localIP().toString();
+  }
   return String();
 }
 
@@ -77,7 +80,7 @@ String config_processor(const String& var){
   else if(var == "SSID"){
     return WiFi.SSID();
   }
-  else if(var == "IP"){
+  else if(var == "DEVICE_IP"){
     return WiFi.localIP().toString();
   }
   else if (var == "MAC")
