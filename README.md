@@ -5,9 +5,11 @@
 [![C++](https://img.shields.io/badge/C-++-blue.svg)]()
 [![PlatformIO](https://img.shields.io/badge/Platform-IO-blue.svg)](https://platformio.org/)
 
-![CHURRASQUEIRA CONTROLE REMOTO](/img/tapegandofogo.jpg "TÁ PEGANDO FOGO BICHO - CHURRASQUEIRA CONTROLE REMOTO")
+<p align="center">
+  <img width="450" src="https://raw.githubusercontent.com/lgmarin/defuma_iot/main/img/tapegandofogo.jpg" alt="Tá pegando fogo BIXO!!!!">
+</p>
 
-This software was developed with the intention to help to produce a delicious, tender and with an amazing smoked flavored meat! What better way than to make a Nerd happy than with some long smoking process with some friends, some beer and some technology involved, why not?
+This project was developed with the intention to help to produce a delicious, tender and with an amazing smoked flavored meat! What better way than to make a Nerd happy than with some long smoking process with some friends, some beer and some technology involved, why not?
 
 To acquire a good quality smoked meat, the amount of smoke produced, and mainly the temperature should be constantly controlled (temperature should not be too low and specially, not too high) during the long 12 hours (or more, depending on the cut) to succeed.
 
@@ -32,7 +34,9 @@ Development of a data monitoring for a meat smoker:
 
 ## Schematics and List of Materials
 
-![CHURRASQUEIRA CONTROLE REMOTO](/img/schematics_schem.png "Schematics, BOM bellow!")
+<p align="center">
+  <img width="500" src="https://raw.githubusercontent.com/lgmarin/defuma_iot/main/img/schematics_schem.png" alt="Schematics">
+</p>
 
 | Label | Part Type | Properties |
 |-----|-----|---|
@@ -40,12 +44,15 @@ Development of a data monitoring for a meat smoker:
 |J1|Piezo Speaker|-|
 |R1-R4|10kΩ Resistor|Tolerance ±5%, Resistance 10kΩ|
 |U1|ESP8266 WiFi Module|ESP12F|
-|U2|MAX6675|chip MAX6675; interface SPI|
+|U2|MAX6675|Chip MAX6675; Interface SPI|
 |U3|TM1637|4-digit 8-segment Display and Driver|
 
 ## Material Design FrontEnd
 
-![CHURRASQUEIRA CONTROLE REMOTO](/img/screen_phone.png "Front End")
+<p align="center">
+  <img width="250" src="https://raw.githubusercontent.com/lgmarin/defuma_iot/main/img/home.png" alt="Home Screen">
+  <img width="250" src="https://raw.githubusercontent.com/lgmarin/defuma_iot/main/img/config.png" alt="Config Screen">
+</p>
 
 ## Libraries
 
